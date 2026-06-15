@@ -1,0 +1,20 @@
+.card {
+    border: none;
+    border-radius: 12px;
+  }
+  
+  .table {
+    background: white;
+  }
+  
+  .page-title {
+    font-weight: 600;
+  }
+  
+  .section-card {
+    background: white;
+  
+    border-radius: 12px;
+  
+    padding: 20px;
+  }

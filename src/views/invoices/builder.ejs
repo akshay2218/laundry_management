@@ -1,0 +1,283 @@
+<div class="container-fluid">
+
+    <div class="row">
+  
+      <!-- LEFT PANEL -->
+  
+      <div class="col-lg-8">
+  
+        <div class="card mb-4">
+  
+          <div class="card-body">
+  
+            <div class="d-flex justify-content-between align-items-center mb-3">
+  
+              <h4>
+                Invoice Builder
+              </h4>
+  
+              <span class="badge bg-primary">
+                <%= order.orderNumber %>
+              </span>
+  
+            </div>
+  
+            <!-- SERVICE TABS -->
+  
+            <ul class="nav nav-pills mb-4">
+  
+              <li class="nav-item">
+                <button
+                  class="nav-link active">
+                  Dry Cleaning
+                </button>
+              </li>
+  
+              <li class="nav-item">
+                <button
+                  class="nav-link">
+                  Steam Press
+                </button>
+              </li>
+  
+              <li class="nav-item">
+                <button
+                  class="nav-link">
+                  Wash & Fold
+                </button>
+              </li>
+  
+              <li class="nav-item">
+                <button
+                  class="nav-link">
+                  Wash & Iron
+                </button>
+              </li>
+  
+            </ul>
+  
+            <!-- ITEM GRID -->
+  
+            <div class="row">
+  
+              <% items.forEach(item => { %>
+  
+              <div class="col-md-4 mb-3">
+  
+                <div class="item-card">
+  
+                  <h6>
+                    <%= item.itemName %>
+                  </h6>
+  
+                  <div class="price">
+  
+                    ₹<%= item.price %>
+  
+                  </div>
+  
+                  <div class="qty-controls">
+  
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-secondary decrease">
+  
+                      -
+  
+                    </button>
+  
+                    <input
+                      type="number"
+                      min="0"
+                      value="0"
+                      class="qty-input"
+                      data-name="<%= item.itemName %>"
+                      data-price="<%= item.price %>">
+  
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-secondary increase">
+  
+                      +
+  
+                    </button>
+  
+                  </div>
+  
+                </div>
+  
+              </div>
+  
+              <% }) %>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+      <!-- RIGHT PANEL -->
+  
+      <div class="col-lg-4">
+  
+        <div class="card invoice-summary">
+  
+          <div class="card-body">
+  
+            <h5 class="mb-3">
+  
+              Invoice Summary
+  
+            </h5>
+  
+            <div class="customer-box">
+  
+              <strong>
+  
+                <%= order.customerId.name %>
+  
+              </strong>
+  
+              <div>
+  
+                <%= order.customerId.phone %>
+  
+              </div>
+  
+            </div>
+  
+            <hr>
+  
+            <div
+              id="invoiceItems">
+  
+              <p class="text-muted">
+  
+                No items selected
+  
+              </p>
+  
+            </div>
+  
+            <hr>
+  
+            <div class="mb-3">
+  
+              <label class="form-label">
+  
+                Coupon Code
+  
+              </label>
+  
+              <input
+                type="text"
+                class="form-control"
+                id="couponCode">
+  
+            </div>
+  
+            <div class="mb-3">
+  
+              <label class="form-label">
+  
+                Delivery Charge
+  
+              </label>
+  
+              <input
+                type="number"
+                value="0"
+                class="form-control"
+                id="deliveryCharge">
+  
+            </div>
+  
+            <div class="mb-3">
+  
+              <label class="form-label">
+  
+                Express Charge
+  
+              </label>
+  
+              <input
+                type="number"
+                value="0"
+                class="form-control"
+                id="expressCharge">
+  
+            </div>
+  
+            <hr>
+  
+            <div class="summary-row">
+  
+              <span>Subtotal</span>
+  
+              <strong id="subtotal">
+  
+                ₹0
+  
+              </strong>
+  
+            </div>
+  
+            <div class="summary-row">
+  
+              <span>GST</span>
+  
+              <strong id="gst">
+  
+                ₹0
+  
+              </strong>
+  
+            </div>
+  
+            <div class="summary-row total">
+  
+              <span>Total</span>
+  
+              <strong id="total">
+  
+                ₹0
+  
+              </strong>
+  
+            </div>
+  
+            <form
+              id="invoiceForm"
+              action="/invoices/generate"
+              method="POST">
+  
+              <input
+                type="hidden"
+                name="orderId"
+                value="<%= order._id %>">
+  
+              <input
+                type="hidden"
+                name="items"
+                id="invoicePayload">
+  
+              <button
+                class="btn btn-success w-100 mt-4">
+  
+                Generate Invoice
+  
+              </button>
+  
+            </form>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </div>

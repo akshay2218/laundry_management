@@ -1,0 +1,132 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+  
+      <div>
+  
+        <h3 class="page-title">
+          Coupons
+        </h3>
+  
+        <p class="text-muted mb-0">
+          Manage promotional coupons
+        </p>
+  
+      </div>
+  
+      <a
+        href="/coupons/create"
+        class="btn btn-primary">
+  
+        Create Coupon
+  
+      </a>
+  
+    </div>
+  
+    <div class="card">
+  
+      <div class="card-body p-0">
+  
+        <div class="table-responsive">
+  
+          <table class="table table-hover mb-0">
+  
+            <thead>
+  
+            <tr>
+  
+              <th>Code</th>
+              <th>Title</th>
+              <th>Discount</th>
+              <th>Valid From</th>
+              <th>Valid To</th>
+              <th>Status</th>
+  
+            </tr>
+  
+            </thead>
+  
+            <tbody>
+  
+            <% coupons.forEach(coupon => { %>
+  
+            <tr>
+  
+              <td>
+  
+                <strong>
+  
+                  <%= coupon.code %>
+  
+                </strong>
+  
+              </td>
+  
+              <td>
+  
+                <%= coupon.title %>
+  
+              </td>
+  
+              <td>
+  
+                <% if(coupon.discountType === 'PERCENTAGE'){ %>
+  
+                  <%= coupon.discountValue %>%
+  
+                <% } else { %>
+  
+                  ₹<%= coupon.discountValue %>
+  
+                <% } %>
+  
+              </td>
+  
+              <td>
+  
+                <%= new Date(coupon.validFrom)
+                  .toLocaleDateString() %>
+  
+              </td>
+  
+              <td>
+  
+                <%= new Date(coupon.validTo)
+                  .toLocaleDateString() %>
+  
+              </td>
+  
+              <td>
+  
+                <% if(coupon.isActive){ %>
+  
+                  <span class="badge bg-success">
+                    Active
+                  </span>
+  
+                <% } else { %>
+  
+                  <span class="badge bg-danger">
+                    Inactive
+                  </span>
+  
+                <% } %>
+  
+              </td>
+  
+            </tr>
+  
+            <% }) %>
+  
+            </tbody>
+  
+          </table>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </div>

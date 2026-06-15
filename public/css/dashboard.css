@@ -1,0 +1,58 @@
+.dashboard-tabs .nav-link {
+
+    color: #666;
+  
+    font-weight: 500;
+  }
+  
+  .dashboard-tabs .nav-link.active {
+  
+    color: #2f80ed;
+  
+    border-color:
+      #2f80ed #2f80ed white;
+  }
+  
+  .empty-state {
+  
+    padding: 80px 20px;
+  
+    text-align: center;
+  }
+  
+  .status-badge {
+  
+    padding: 8px 12px;
+  
+    font-size: 12px;
+  }
+  
+  .status-new {
+  
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+  
+  .status-in_process {
+  
+    background: #fff8e1;
+    color: #f57f17;
+  }
+  
+  .status-ready {
+  
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .status-assigned {
+  
+    background: #ede7f6;
+    color: #6a1b9a;
+  }
+  
+  .status-delivered {
+  
+    background: #e0f2f1;
+    color: #00695c;
+  }

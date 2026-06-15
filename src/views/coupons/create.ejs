@@ -1,0 +1,249 @@
+<div class="container-fluid">
+
+    <div class="card">
+  
+      <div class="card-body">
+  
+        <h3 class="mb-4">
+  
+          Create Coupon
+  
+        </h3>
+  
+        <div class="wizard-steps">
+  
+          <div class="step active">
+            1. Details
+          </div>
+  
+          <div class="step">
+            2. Discount
+          </div>
+  
+          <div class="step">
+            3. Services
+          </div>
+  
+          <div class="step">
+            4. Preview
+          </div>
+  
+        </div>
+  
+        <form
+          method="POST"
+          action="/coupons/preview">
+  
+          <div class="row">
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Coupon Code
+  
+              </label>
+  
+              <input
+                type="text"
+                name="code"
+                class="form-control"
+                required>
+  
+            </div>
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Title
+  
+              </label>
+  
+              <input
+                type="text"
+                name="title"
+                class="form-control"
+                required>
+  
+            </div>
+  
+          </div>
+  
+          <div class="mb-3">
+  
+            <label class="form-label">
+  
+              Description
+  
+            </label>
+  
+            <textarea
+              class="form-control"
+              rows="3"
+              name="description"></textarea>
+  
+          </div>
+  
+          <div class="row">
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Discount Type
+  
+              </label>
+  
+              <select
+                name="discountType"
+                class="form-select">
+  
+                <option value="PERCENTAGE">
+  
+                  Percentage
+  
+                </option>
+  
+                <option value="FLAT">
+  
+                  Flat Amount
+  
+                </option>
+  
+              </select>
+  
+            </div>
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Discount Value
+  
+              </label>
+  
+              <input
+                type="number"
+                name="discountValue"
+                class="form-control">
+  
+            </div>
+  
+          </div>
+  
+          <div class="row">
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Minimum Order Value
+  
+              </label>
+  
+              <input
+                type="number"
+                name="minimumOrderValue"
+                class="form-control">
+  
+            </div>
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Maximum Discount
+  
+              </label>
+  
+              <input
+                type="number"
+                name="maximumDiscountValue"
+                class="form-control">
+  
+            </div>
+  
+          </div>
+  
+          <div class="row">
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Valid From
+  
+              </label>
+  
+              <input
+                
+class="form-control datepicker"
+                name="validFrom"
+                class="form-control">
+  
+            </div>
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+  
+                Valid To
+  
+              </label>
+  
+              <input
+                
+class="form-control datepicker"
+                name="validTo"
+                class="form-control">
+  
+            </div>
+  
+          </div>
+  
+          <div class="mb-4">
+  
+            <label class="form-label">
+  
+              Applicable Services
+  
+            </label>
+  
+            <% services.forEach(service => { %>
+  
+            <div class="form-check">
+  
+              <input
+                type="checkbox"
+                class="form-check-input"
+                name="applicableServices"
+                value="<%= service._id %>">
+  
+              <label
+                class="form-check-label">
+  
+                <%= service.name %>
+  
+              </label>
+  
+            </div>
+  
+            <% }) %>
+  
+          </div>
+  
+          <button
+            class="btn btn-primary">
+  
+            Preview Coupon
+  
+          </button>
+  
+        </form>
+  
+      </div>
+  
+    </div>
+  
+  </div>

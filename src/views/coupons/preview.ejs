@@ -1,0 +1,90 @@
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+  
+      <div class="col-lg-6">
+  
+        <div class="coupon-preview">
+  
+          <div class="coupon-header">
+  
+            <h2>
+  
+              <%= coupon.title %>
+  
+            </h2>
+  
+            <h4>
+  
+              <%= coupon.code %>
+  
+            </h4>
+  
+          </div>
+  
+          <div class="coupon-body">
+  
+            <p>
+  
+              <%= coupon.description %>
+  
+            </p>
+  
+            <div class="discount">
+  
+              <% if(coupon.discountType === 'PERCENTAGE'){ %>
+  
+                <%= coupon.discountValue %>% OFF
+  
+              <% } else { %>
+  
+                ₹<%= coupon.discountValue %> OFF
+  
+              <% } %>
+  
+            </div>
+  
+            <p>
+  
+              Valid Till
+  
+              <strong>
+  
+                <%= new Date(coupon.validTo)
+                  .toLocaleDateString() %>
+  
+              </strong>
+  
+            </p>
+  
+          </div>
+  
+          <form
+            method="POST"
+            action="/coupons/create">
+  
+            <% Object.keys(coupon).forEach(key => { %>
+  
+              <input
+                type="hidden"
+                name="<%= key %>"
+                value="<%= coupon[key] %>">
+  
+            <% }) %>
+  
+            <button
+              class="btn btn-success w-100">
+  
+              Save Coupon
+  
+            </button>
+  
+          </form>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </div>

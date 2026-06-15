@@ -1,0 +1,223 @@
+<div class="container-fluid">
+
+    <div class="row">
+  
+      <div class="col-lg-4">
+  
+        <div class="card mb-4">
+  
+          <div class="card-body">
+  
+            <h4>
+              <%= customer.name %>
+            </h4>
+  
+            <p class="mb-1">
+              <%= customer.phone %>
+            </p>
+  
+            <p class="text-muted">
+              <%= customer.email || '-' %>
+            </p>
+  
+          </div>
+  
+        </div>
+  
+        <div class="card">
+  
+          <div class="card-body">
+  
+            <h5 class="mb-3">
+              Customer Summary
+            </h5>
+  
+            <div class="summary-item">
+  
+              <span>Total Orders</span>
+  
+              <strong>
+                <%= customer.totalOrders %>
+              </strong>
+  
+            </div>
+  
+            <div class="summary-item">
+  
+              <span>Lifetime Value</span>
+  
+              <strong>
+                ₹<%= customer.lifetimeValue %>
+              </strong>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+      <div class="col-lg-8">
+  
+        <div class="card">
+  
+          <div class="card-body">
+  
+            <h4 class="mb-4">
+              Create Order
+            </h4>
+  
+            <% if(errors && errors.length){ %>
+  
+            <div class="alert alert-danger">
+  
+              <ul class="mb-0">
+  
+                <% errors.forEach(error => { %>
+  
+                <li>
+                  <%= error.msg %>
+                </li>
+  
+                <% }) %>
+  
+              </ul>
+  
+            </div>
+  
+            <% } %>
+  
+            <form
+              action="/orders/create"
+              method="POST">
+  
+              <input
+                type="hidden"
+                name="customerId"
+                value="<%= customer._id %>">
+  
+              <div class="mb-4">
+  
+                <label class="form-label">
+                  Address
+                </label>
+  
+                <% addresses.forEach(address => { %>
+  
+                <div class="address-option">
+  
+                  <input
+                    class="form-check-input me-2"
+                    type="radio"
+                    name="addressId"
+                    value="<%= address._id %>"
+                    required>
+  
+                  <strong>
+                    <%= address.addressType %>
+                  </strong>
+  
+                  <div class="text-muted">
+  
+                    <%= address.houseNo %>
+                    <%= address.apartment %>
+  
+                  </div>
+  
+                </div>
+  
+                <% }) %>
+  
+              </div>
+  
+              <div class="row">
+  
+                <div class="col-md-6 mb-3">
+  
+                  <label class="form-label">
+                    Order Source
+                  </label>
+  
+                  <select
+                    name="orderSource"
+                    class="form-select">
+  
+                    <option value="STORE">
+                      Store
+                    </option>
+  
+                    <option value="CUSTOMER_CARE">
+                      Customer Care
+                    </option>
+  
+                    <option value="WALK_IN">
+                      Walk In
+                    </option>
+  
+                  </select>
+  
+                </div>
+  
+                <div class="col-md-6 mb-3">
+  
+                  <label class="form-label">
+                    Pickup Date
+                  </label>
+  
+                  <input
+                    
+class="form-control datepicker"
+                    name="pickupDate"
+                    class="form-control"
+                    required>
+  
+                </div>
+  
+              </div>
+  
+              <div class="mb-3">
+  
+                <label class="form-label">
+                  Pickup Time
+                </label>
+  
+                <input
+                  type="time"
+                  name="pickupTime"
+                  class="form-control"
+                  required>
+  
+              </div>
+  
+              <div class="mb-4">
+  
+                <label class="form-label">
+                  Instructions
+                </label>
+  
+                <textarea
+                  rows="4"
+                  class="form-control"
+                  name="instructions"></textarea>
+  
+              </div>
+  
+              <button
+                class="btn btn-primary">
+  
+                Create Order
+  
+              </button>
+  
+            </form>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </div>

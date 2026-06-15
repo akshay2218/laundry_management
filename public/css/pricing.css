@@ -1,0 +1,12 @@
+.list-group-item.active {
+
+    background: #2f80ed;
+  
+    border-color: #2f80ed;
+  }
+  
+  .table td,
+  .table th {
+  
+    vertical-align: middle;
+  }

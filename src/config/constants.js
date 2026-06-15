@@ -1,0 +1,14 @@
+module.exports = {
+    ROLES: {
+      ADMIN: "ADMIN",
+      STORE_MANAGER: "STORE_MANAGER"
+    },
+  
+    ORDER_STATUS: {
+      NEW: "NEW",
+      IN_PROCESS: "IN_PROCESS",
+      READY: "READY",
+      ASSIGNED: "ASSIGNED",
+      DELIVERED: "DELIVERED"
+    }
+  };

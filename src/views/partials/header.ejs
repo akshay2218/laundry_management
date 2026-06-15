@@ -1,0 +1,59 @@
+<header class="top-header">
+
+    <div class="d-flex align-items-center">
+  
+      <button
+        class="btn btn-light d-lg-none me-2"
+        id="sidebarToggle">
+  
+        <i class="bi bi-list"></i>
+  
+      </button>
+  
+      <h5 class="mb-0 fw-semibold">
+        Laundry Management
+      </h5>
+  
+    </div>
+  
+    <div
+      class="d-flex align-items-center gap-3">
+  
+      <span
+        class="badge bg-primary">
+  
+        <%= req.user?.role || '' %>
+  
+      </span>
+  
+      <div class="dropdown">
+  
+        <button
+          class="btn btn-light dropdown-toggle"
+          data-bs-toggle="dropdown">
+  
+          <%= req.user?.name || 'User' %>
+  
+        </button>
+  
+        <ul class="dropdown-menu dropdown-menu-end">
+  
+          <li>
+  
+            <a
+              class="dropdown-item"
+              href="/logout">
+  
+              Logout
+  
+            </a>
+  
+          </li>
+  
+        </ul>
+  
+      </div>
+  
+    </div>
+  
+  </header>

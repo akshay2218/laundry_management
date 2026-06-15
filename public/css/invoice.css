@@ -1,0 +1,67 @@
+.item-card {
+
+    border: 1px solid #e5e7eb;
+  
+    border-radius: 12px;
+  
+    padding: 16px;
+  
+    height: 100%;
+  }
+  
+  .price {
+  
+    color: #2f80ed;
+  
+    font-weight: 700;
+  
+    margin-bottom: 15px;
+  }
+  
+  .qty-controls {
+  
+    display: flex;
+  
+    align-items: center;
+  
+    gap: 8px;
+  }
+  
+  .qty-input {
+  
+    width: 60px;
+  
+    text-align: center;
+  }
+  
+  .invoice-summary {
+  
+    position: sticky;
+  
+    top: 20px;
+  }
+  
+  .summary-row {
+  
+    display: flex;
+  
+    justify-content: space-between;
+  
+    margin-bottom: 10px;
+  }
+  
+  .total {
+  
+    font-size: 18px;
+  
+    font-weight: 700;
+  }
+  
+  .customer-box {
+  
+    background: #f8fafc;
+  
+    padding: 12px;
+  
+    border-radius: 8px;
+  }

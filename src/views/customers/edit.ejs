@@ -1,0 +1,73 @@
+<div class="container-fluid">
+
+    <div class="card customer-form-card">
+  
+      <div class="card-body">
+  
+        <h3 class="mb-4">
+  
+          Edit Customer
+  
+        </h3>
+  
+        <form
+          method="POST"
+          action="/customers/<%= customer._id %>/edit">
+  
+          <div class="row">
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+                Name
+              </label>
+  
+              <input
+                class="form-control"
+                name="name"
+                value="<%= customer.name %>">
+  
+            </div>
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+                Phone
+              </label>
+  
+              <input
+                class="form-control"
+                name="phone"
+                value="<%= customer.phone %>">
+  
+            </div>
+  
+            <div class="col-md-6 mb-3">
+  
+              <label class="form-label">
+                Email
+              </label>
+  
+              <input
+                class="form-control"
+                name="email"
+                value="<%= customer.email || '' %>">
+  
+            </div>
+  
+          </div>
+  
+          <button
+            class="btn btn-primary">
+  
+            Update Customer
+  
+          </button>
+  
+        </form>
+  
+      </div>
+  
+    </div>
+  
+  </div>

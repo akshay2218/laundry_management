@@ -1,0 +1,241 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+  
+      <div>
+  
+        <h3>
+          GST Report
+        </h3>
+  
+        <p class="text-muted mb-0">
+          GST summary and invoice records
+        </p>
+  
+      </div>
+  
+      <div>
+  
+        <a
+          href="/reports/gst/export/csv"
+          class="btn btn-outline-success">
+  
+          Export CSV
+  
+        </a>
+  
+      </div>
+  
+    </div>
+  
+    <div class="card mb-4">
+  
+      <div class="card-body">
+  
+        <form
+          method="GET"
+          action="/reports/gst">
+  
+          <div class="row">
+  
+            <div class="col-md-4">
+  
+              <input
+                
+class="form-control datepicker"
+                name="fromDate"
+                class="form-control">
+  
+            </div>
+  
+            <div class="col-md-4">
+  
+              <input
+                
+class="form-control datepicker"
+                name="toDate"
+                class="form-control">
+  
+            </div>
+  
+            <div class="col-md-4">
+  
+              <button
+                class="btn btn-primary w-100">
+  
+                Filter
+  
+              </button>
+  
+            </div>
+  
+          </div>
+  
+        </form>
+  
+      </div>
+  
+    </div>
+  
+    <div class="row mb-4">
+  
+      <div class="col-md-3">
+  
+        <div class="report-card">
+  
+          <div class="report-title">
+            Taxable Value
+          </div>
+  
+          <h4>
+  
+            ₹<%= summary.taxableAmount || 0 %>
+  
+          </h4>
+  
+        </div>
+  
+      </div>
+  
+      <div class="col-md-3">
+  
+        <div class="report-card">
+  
+          <div class="report-title">
+            GST Amount
+          </div>
+  
+          <h4>
+  
+            ₹<%= summary.gstAmount || 0 %>
+  
+          </h4>
+  
+        </div>
+  
+      </div>
+  
+      <div class="col-md-3">
+  
+        <div class="report-card">
+  
+          <div class="report-title">
+            Invoices
+          </div>
+  
+          <h4>
+  
+            <%= summary.invoiceCount || 0 %>
+  
+          </h4>
+  
+        </div>
+  
+      </div>
+  
+      <div class="col-md-3">
+  
+        <div class="report-card">
+  
+          <div class="report-title">
+            Invoice Value
+          </div>
+  
+          <h4>
+  
+            ₹<%= summary.finalAmount || 0 %>
+  
+          </h4>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+    <div class="card">
+  
+      <div class="card-body p-0">
+  
+        <div class="table-responsive">
+  
+          <table id="dataTable" class="table table-hover">
+  
+            <thead>
+  
+            <tr>
+  
+              <th>Invoice #</th>
+  
+              <th>Date</th>
+  
+              <th>Customer</th>
+  
+              <th>Taxable</th>
+  
+              <th>GST</th>
+  
+              <th>Total</th>
+  
+            </tr>
+  
+            </thead>
+  
+            <tbody>
+  
+            <% invoices.forEach(invoice => { %>
+  
+            <tr>
+  
+              <td>
+  
+                <%= invoice.invoiceNumber %>
+  
+              </td>
+  
+              <td>
+  
+                <%= new Date(invoice.generatedAt)
+                  .toLocaleDateString() %>
+  
+              </td>
+  
+              <td>
+  
+                <%= invoice.orderId?.customerId?.name || '-' %>
+  
+              </td>
+  
+              <td>
+  
+                ₹<%= invoice.taxableAmount %>
+  
+              </td>
+  
+              <td>
+  
+                ₹<%= invoice.gstAmount %>
+  
+              </td>
+  
+              <td>
+  
+                ₹<%= invoice.finalAmount %>
+  
+              </td>
+  
+            </tr>
+  
+            <% }) %>
+  
+            </tbody>
+  
+          </table>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </div>

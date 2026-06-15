@@ -1,0 +1,152 @@
+<div class="container-fluid">
+
+    <div class="row">
+  
+      <!-- LEFT SERVICE MENU -->
+  
+      <div class="col-lg-3">
+  
+        <div class="card">
+  
+          <div class="card-body">
+  
+            <h5 class="mb-3">
+              Services
+            </h5>
+  
+            <div class="list-group">
+  
+              <% services.forEach(service => { %>
+  
+              <a
+                href="/pricing?service=<%= service._id %>"
+                class="list-group-item list-group-item-action
+                <%= selectedService &&
+                    selectedService._id.toString() === service._id.toString()
+                    ? 'active' : '' %>">
+  
+                <%= service.name %>
+  
+              </a>
+  
+              <% }) %>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+      <!-- RIGHT CONTENT -->
+  
+      <div class="col-lg-9">
+  
+        <div class="card">
+  
+          <div class="card-body">
+  
+            <div class="d-flex justify-content-between mb-4">
+  
+              <h4>
+  
+                <%= selectedService
+                    ? selectedService.name
+                    : 'Pricing Management' %>
+  
+              </h4>
+  
+              <a
+                href="/pricing/items/create"
+                class="btn btn-primary">
+  
+                Add Item
+  
+              </a>
+  
+            </div>
+  
+            <div class="row mb-4">
+  
+              <div class="col-md-6">
+  
+                <input
+                  id="searchInput"
+                  class="form-control"
+                  placeholder="Search Item">
+  
+              </div>
+  
+            </div>
+  
+            <div class="table-responsive">
+  
+              <table
+                id="pricingTable"
+                class="table table-hover">
+  
+                <thead>
+  
+                <tr>
+  
+                  <th>Category</th>
+                  <th>Item</th>
+                  <th>Price</th>
+                  <th width="120">
+                    Actions
+                  </th>
+  
+                </tr>
+  
+                </thead>
+  
+                <tbody>
+  
+                <% priceItems.forEach(item => { %>
+  
+                <tr>
+  
+                  <td>
+                    <%= item.category %>
+                  </td>
+  
+                  <td>
+                    <%= item.itemName %>
+                  </td>
+  
+                  <td>
+                    ₹<%= item.price %>
+                  </td>
+  
+                  <td>
+  
+                    <a
+                      href="/pricing/items/<%= item._id %>/edit"
+                      class="btn btn-sm btn-outline-primary">
+  
+                      Edit
+  
+                    </a>
+  
+                  </td>
+  
+                </tr>
+  
+                <% }) %>
+  
+                </tbody>
+  
+              </table>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </div>

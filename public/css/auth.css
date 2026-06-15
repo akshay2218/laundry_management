@@ -1,0 +1,38 @@
+body {
+
+    background:
+      #f7f9fc;
+  
+    min-height: 100vh;
+  
+    display: flex;
+  
+    justify-content: center;
+  
+    align-items: center;
+  
+    font-family:
+      Inter,
+      sans-serif;
+  }
+  
+  .login-card {
+  
+    width: 420px;
+  
+    background: white;
+  
+    border-radius: 16px;
+  
+    padding: 32px;
+  }
+  
+  .form-control {
+  
+    height: 48px;
+  }
+  
+  .btn-primary {
+  
+    height: 48px;
+  }

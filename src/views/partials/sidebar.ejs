@@ -1,0 +1,75 @@
+<aside
+  id="sidebar"
+  class="sidebar">
+
+  <div class="sidebar-logo">
+
+    <h4>
+      Laundry ERP
+    </h4>
+
+  </div>
+
+  <nav>
+
+    <ul class="sidebar-menu">
+
+      <li>
+        <a href="/dashboard">
+          <i class="bi bi-speedometer2"></i>
+          Dashboard
+        </a>
+      </li>
+
+      <li>
+        <a href="/customers">
+          <i class="bi bi-people"></i>
+          Customers
+        </a>
+      </li>
+
+      <li>
+        <a href="/orders">
+          <i class="bi bi-bag"></i>
+          Orders
+        </a>
+      </li>
+
+      <% if(req.user &&
+      req.user.role === 'ADMIN'){ %>
+
+      <li>
+        <a href="/pricing">
+          <i class="bi bi-currency-rupee"></i>
+          Pricing
+        </a>
+      </li>
+
+      <li>
+        <a href="/coupons">
+          <i class="bi bi-ticket-perforated"></i>
+          Coupons
+        </a>
+      </li>
+
+      <% } %>
+
+      <li>
+        <a href="/reports">
+          <i class="bi bi-graph-up"></i>
+          Reports
+        </a>
+      </li>
+
+      <li>
+        <a href="/delivery">
+          <i class="bi bi-truck"></i>
+          Delivery
+        </a>
+      </li>
+
+    </ul>
+
+  </nav>
+
+</aside>

@@ -1,0 +1,26 @@
+.address-option {
+
+    border: 1px solid #e5e7eb;
+  
+    border-radius: 10px;
+  
+    padding: 12px;
+  
+    margin-bottom: 12px;
+  
+    cursor: pointer;
+  }
+  
+  .address-option:hover {
+  
+    background: #f8fafc;
+  }
+  
+  .summary-item {
+  
+    display: flex;
+  
+    justify-content: space-between;
+  
+    margin-bottom: 12px;
+  }

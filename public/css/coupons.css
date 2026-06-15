@@ -1,0 +1,65 @@
+.wizard-steps {
+
+    display: flex;
+  
+    gap: 12px;
+  
+    margin-bottom: 30px;
+  }
+  
+  .step {
+  
+    flex: 1;
+  
+    text-align: center;
+  
+    padding: 12px;
+  
+    border-radius: 8px;
+  
+    background: #f3f4f6;
+  }
+  
+  .step.active {
+  
+    background: #2f80ed;
+  
+    color: white;
+  }
+  
+  .coupon-preview {
+  
+    background: white;
+  
+    border-radius: 16px;
+  
+    overflow: hidden;
+  
+    box-shadow:
+      0 8px 20px rgba(0,0,0,.08);
+  }
+  
+  .coupon-header {
+  
+    background: #2f80ed;
+  
+    color: white;
+  
+    padding: 30px;
+  
+    text-align: center;
+  }
+  
+  .coupon-body {
+  
+    padding: 30px;
+  }
+  
+  .discount {
+  
+    font-size: 32px;
+  
+    font-weight: bold;
+  
+    margin: 20px 0;
+  }

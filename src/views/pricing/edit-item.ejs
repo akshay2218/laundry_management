@@ -1,0 +1,68 @@
+<div class="container-fluid">
+
+    <div class="card">
+  
+      <div class="card-body">
+  
+        <h3 class="mb-4">
+          Edit Price Item
+        </h3>
+  
+        <form
+          method="POST"
+          action="/pricing/items/<%= item._id %>/edit">
+  
+          <div class="mb-3">
+  
+            <label class="form-label">
+              Category
+            </label>
+  
+            <input
+              class="form-control"
+              name="category"
+              value="<%= item.category %>">
+  
+          </div>
+  
+          <div class="mb-3">
+  
+            <label class="form-label">
+              Item Name
+            </label>
+  
+            <input
+              class="form-control"
+              name="itemName"
+              value="<%= item.itemName %>">
+  
+          </div>
+  
+          <div class="mb-4">
+  
+            <label class="form-label">
+              Price
+            </label>
+  
+            <input
+              type="number"
+              class="form-control"
+              name="price"
+              value="<%= item.price %>">
+  
+          </div>
+  
+          <button
+            class="btn btn-primary">
+  
+            Update Item
+  
+          </button>
+  
+        </form>
+  
+      </div>
+  
+    </div>
+  
+  </div>
