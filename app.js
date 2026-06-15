@@ -10,7 +10,7 @@ const passport = require("./src/config/passport");
 
 const connectDB = require("./src/config/database");
 const sessionConfig = require("./src/config/session");
-
+const csrf = require("csurf");
 const expressLayouts =
   require("express-ejs-layouts");
 
@@ -42,7 +42,7 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 app.use(expressLayouts);
-
+app.use(csrf());
 app.use(
   express.static(
     path.join(__dirname, "public")
@@ -64,11 +64,11 @@ app.use(passport.initialize());
 
 app.use(passport.session());
 
-// app.use(
-//   require(
-//     "./src/modules/auth/routes"
-//   )
-// );
+app.use(
+  require(
+    "./src/modules/auth/routes"
+  )
+);
 
 app.use(
   require(
@@ -89,6 +89,18 @@ app.use(
 );
 
 app.use(
+  require("./src/modules/pricing/routes")
+);
+
+app.use(
+  require("./src/modules/coupons/routes")
+);
+
+app.use(
+  require("./src/modules/reports/routes")
+);
+
+app.use(
   (req, res, next) => {
 
     res.locals.req = req;
@@ -106,10 +118,6 @@ app.locals.appName =
 app.get("/", (req, res) => {
   res.redirect("/dashboard");
 });
-
-// app.use(
-//   require("./src/modules/auth/routes")
-// );
 
 app.listen(
   process.env.PORT || 3000,

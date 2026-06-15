@@ -1,4 +1,4 @@
-const User = require("../src/modules/auth/model");
+const User = require("./model");
 
 class AuthService {
   async findByEmail(email) {

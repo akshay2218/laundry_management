@@ -1,43 +1,62 @@
-const mongoose = require("mongoose");
+const mongoose =
+  require("mongoose");
 
-const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true
+const bcrypt =
+  require("bcryptjs");
+
+const userSchema =
+  new mongoose.Schema(
+    {
+      name: {
+        type: String,
+        required: true
+      },
+
+      email: {
+        type: String,
+        required: true,
+        unique: true
+      },
+
+      passwordHash: {
+        type: String,
+        required: true
+      },
+
+      role: {
+        type: String,
+
+        enum: [
+          "ADMIN",
+          "STORE_MANAGER"
+        ],
+
+        default:
+          "STORE_MANAGER"
+      },
+
+      isActive: {
+        type: Boolean,
+        default: true
+      }
     },
-
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true
-    },
-
-    passwordHash: {
-      type: String,
-      required: true
-    },
-
-    role: {
-      type: String,
-      enum: ["ADMIN", "STORE_MANAGER"],
-      default: "STORE_MANAGER"
-    },
-
-    isActive: {
-      type: Boolean,
-      default: true
+    {
+      timestamps: true
     }
-  },
-  {
-    timestamps: true
-  }
-);
+  );
 
-module.exports = mongoose.model(
-  "User",
-  userSchema
-);
+userSchema.methods.comparePassword =
+  async function (
+    password
+  ) {
+    return bcrypt.compare(
+      password,
+      this.passwordHash
+    );
+  };
+
+module.exports =
+  mongoose.model(
+    "User",
+    userSchema
+  );
