@@ -4,7 +4,7 @@
     "description": "Laundry Management System",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js",
+        "start": "nodemon app.js",
         "dev": "cp .env.example .env\n nodemon app.js"
     },
     "dependencies": {
@@ -32,6 +32,7 @@
         "morgan": "^1.10.0",
         "passport": "^0.7.0",
         "passport-local": "^1.0.0",
+        "puppeteer": "^25.1.0",
         "select2": "^4.0.13",
         "sweetalert2": "^11.26.25",
         "xss-clean": "^0.1.4"

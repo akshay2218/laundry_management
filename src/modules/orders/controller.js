@@ -108,6 +108,11 @@ class OrderController {
             customerId
           );
 
+          const addresses =
+          await service.getCustomerAddresses(
+            customerId
+          );
+
       res.render(
         "orders/create",
         {
@@ -117,7 +122,7 @@ class OrderController {
           customer,
 
           order,
-
+          addresses,
           errors: []
         }
       );

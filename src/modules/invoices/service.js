@@ -13,6 +13,20 @@ const Settings =
 const PriceItem =
   require("../pricing/priceItem.model");
 
+const pricingItems =
+  require('../../data/pricing-items.json');
+
+  const puppeteer =
+  require("puppeteer");
+
+const path =
+  require("path");
+
+const fs =
+  require("fs");  
+  
+const ejs =
+  require("ejs");
 class InvoiceService {
 
   async getOrder(orderId) {
@@ -22,25 +36,27 @@ class InvoiceService {
   }
 
   async getPriceItems(
-    serviceId,
-    category
+    // serviceId,
+    // category
   ) {
 
-    const query = {
-      isActive: true
-    };
+    // const query = {
+    //   isActive: true
+    // };
 
-    if (serviceId) {
-      query.serviceId =
-        serviceId;
-    }
+    // if (serviceId) {
+    //   query.serviceId =
+    //     serviceId;
+    // }
 
-    if (category) {
-      query.category =
-        category;
-    }
+    // if (category) {
+    //   query.category =
+    //     category;
+    // }
 
-    return PriceItem.find(query);
+    
+    // return PriceItem.find(query);
+    return pricingItems;
   }
 
   async getCoupon(code) {
@@ -157,34 +173,49 @@ class InvoiceService {
     const invoiceNumber =
       `INV${Date.now()}`;
 
-    return Invoice.create({
-
-      invoiceNumber,
-
-      orderId:
-        payload.orderId,
-
-      items:
-        payload.items,
-
-      couponCode:
-        payload.couponCode,
-
-      deliveryCharge:
-        payload.deliveryCharge ||
-        0,
-
-      expressCharge:
-        payload.expressCharge ||
-        0,
-
-      generatedAt:
-        new Date(),
-
-      isFinalized: true,
-
-      ...totals
-    });
+      return Invoice.create({
+        invoiceNumber,
+      
+        orderId: payload.orderId,
+      
+        items: payload.items,
+      
+        couponCode: payload.couponCode,
+      
+        deliveryCharge:
+          payload.deliveryCharge || 0,
+      
+        expressCharge:
+          payload.expressCharge || 0,
+      
+        deliveryDate:
+          payload.deliveryDate,
+      
+        deliveryTime:
+          payload.deliveryTime,
+      
+        challanNumber:
+          payload.challanNumber,
+      
+        customerGST:
+          payload.customerGST,
+      
+        comments:
+          payload.comments,
+      
+        generatedAt:
+          new Date(),
+      
+        isFinalized: true,
+      
+        sgstAmount:
+          totals.gstAmount / 2,
+      
+        cgstAmount:
+          totals.gstAmount / 2,
+      
+        ...totals
+      });
   }
 
   async getInvoice(id) {
@@ -197,6 +228,76 @@ class InvoiceService {
             "customerId"
         }
       });
+  }
+
+  async generatePdf(invoice) {
+
+    const browser =
+    await puppeteer.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox"
+      ]
+    });
+  
+    const page =
+      await browser.newPage();
+  
+    const html =
+      await ejs.renderFile(
+        path.join(
+          process.cwd(),
+          "src/views/invoices/pdf.ejs"
+        ),
+        { invoice }
+      );
+  
+    await page.setContent(
+      html,
+      {
+        waitUntil:
+          "networkidle0"
+      }
+    );
+  
+    const invoiceDir =
+  path.join(
+    process.cwd(),
+    "public",
+    "invoices"
+  );
+
+if (
+  !fs.existsSync(
+    invoiceDir
+  )
+) {
+
+  fs.mkdirSync(
+    invoiceDir,
+    {
+      recursive: true
+    }
+  );
+
+}
+
+const pdfPath =
+  path.join(
+    invoiceDir,
+    `${invoice.invoiceNumber}.pdf`
+  );
+  
+    await page.pdf({
+      path: pdfPath,
+      format: "A4",
+      printBackground: true
+    });
+  
+    await browser.close();
+  
+    return pdfPath;
   }
 }
 

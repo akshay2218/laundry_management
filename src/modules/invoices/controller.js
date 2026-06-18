@@ -33,7 +33,7 @@ const {
   
             order,
   
-            items,
+            items: items["Dry Cleaning"],
   
             errors: []
           }
@@ -94,9 +94,10 @@ const {
         JSON.parse(
           req.body.items
         );
+        
         const invoice =
           await service.generateInvoice(
-            req.body.items
+            req.body
           );
   
         res.redirect(
@@ -137,7 +138,36 @@ const {
         next(err);
       }
     }
+
+    async downloadPdf(
+      req,
+      res,
+      next
+    ) {
+      try {
+    
+        const invoice =
+          await service.getInvoice(
+            req.params.id
+          );
+    
+        const pdfPath =
+          await service.generatePdf(
+            invoice
+          );
+    
+        return res.download(
+          pdfPath
+        );
+    
+      } catch (err) {
+    
+        next(err);
+    
+      }
+    }
+    
   }
-  
+
   module.exports =
     new InvoiceController();

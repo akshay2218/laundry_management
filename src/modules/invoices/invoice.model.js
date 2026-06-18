@@ -21,47 +21,51 @@ const itemSchema =
     }
   );
 
-const invoiceSchema =
-  new mongoose.Schema(
-    {
-      invoiceNumber: {
-        type: String,
-        unique: true
-      },
-
-      orderId: {
-        type:
-          mongoose.Schema.Types.ObjectId,
-        ref: "Order"
-      },
-      isFinalized: {
-        type: Boolean,
-        default: false
-      },
-      items: [itemSchema],
-
-      subtotal: Number,
-
-      discount: Number,
-
-      taxableAmount: Number,
-
-      gstAmount: Number,
-
-      finalAmount: Number,
-
-      couponCode: String,
-
-      deliveryCharge: Number,
-
-      expressCharge: Number,
-
-      generatedAt: Date
+  const invoiceSchema = new mongoose.Schema({
+    invoiceNumber: {
+      type: String,
+      unique: true
     },
-    {
-      timestamps: true
-    }
-  );
+  
+    orderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order"
+    },
+  
+    isFinalized: {
+      type: Boolean,
+      default: false
+    },
+  
+    items: [itemSchema],
+  
+    subtotal: Number,
+    discount: Number,
+    taxableAmount: Number,
+  
+    gstAmount: Number,
+    sgstAmount: Number,
+    cgstAmount: Number,
+  
+    finalAmount: Number,
+  
+    couponCode: String,
+  
+    deliveryCharge: Number,
+    expressCharge: Number,
+  
+    deliveryDate: String,
+    deliveryTime: String,
+  
+    challanNumber: String,
+    customerGST: String,
+  
+    comments: String,
+  
+    generatedAt: Date
+  }, {
+    timestamps: true
+  });
 
 invoiceSchema.index({
   invoiceNumber: 1

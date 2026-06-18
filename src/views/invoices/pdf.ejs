@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><%= invoice.invoiceNumber %></title>
+
+    <style>
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size:12px;
+            color:#333;
+            padding:20px;
+        }
+
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            border-bottom:2px solid #198754;
+            padding-bottom:15px;
+            margin-bottom:20px;
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:bold;
+            color:#198754;
+        }
+
+        .company{
+            text-align:right;
+        }
+
+        .company h2{
+            margin:0;
+            color:#198754;
+        }
+
+        .section{
+            margin-bottom:20px;
+        }
+
+        .row{
+            width:100%;
+            margin-bottom:15px;
+        }
+
+        .col{
+            display:inline-block;
+            vertical-align:top;
+            width:48%;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        table th{
+            background:#198754;
+            color:#fff;
+            padding:10px;
+            border:1px solid #ddd;
+        }
+
+        table td{
+            border:1px solid #ddd;
+            padding:8px;
+        }
+
+        .text-right{
+            text-align:right;
+        }
+
+        .summary{
+            width:350px;
+            margin-left:auto;
+            margin-top:20px;
+        }
+
+        .summary td{
+            padding:8px;
+        }
+
+        .grand-total{
+            background:#198754;
+            color:white;
+            font-weight:bold;
+        }
+
+        .footer{
+            margin-top:40px;
+            border-top:1px solid #ddd;
+            padding-top:20px;
+        }
+
+        .small{
+            font-size:10px;
+            color:#666;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <div class="logo">
+                UClean
+            </div>
+
+            <div>
+                We ❤️ Laundry
+            </div>
+
+        </div>
+
+        <div class="company">
+
+            <h2>TAX INVOICE</h2>
+
+            <p>
+                Invoice No:
+                <strong><%= invoice.invoiceNumber %></strong>
+            </p>
+
+            <p>
+                Date:
+                <%= new Date(invoice.generatedAt).toLocaleDateString('en-IN') %>
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- CUSTOMER -->
+
+    <div class="section">
+
+        <div class="row">
+
+            <div class="col">
+
+                <h3>Customer Details</h3>
+
+                <p>
+                    <strong>Name:</strong>
+                    <%= invoice.orderId?.customerId?.name || '-' %>
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    <%= invoice.orderId?.customerId?.phone || '-' %>
+                </p>
+
+                <p>
+                    <strong>GST No:</strong>
+                    <%= invoice.customerGST || '-' %>
+                </p>
+
+            </div>
+
+            <div class="col">
+
+                <h3>Order Details</h3>
+
+                <p>
+                    <strong>Order No:</strong>
+                    <%= invoice.orderId?.orderNumber || '-' %>
+                </p>
+
+                <p>
+                    <strong>Challan No:</strong>
+                    <%= invoice.challanNumber || '-' %>
+                </p>
+
+                <p>
+                    <strong>Delivery Date:</strong>
+                    <%= invoice.deliveryDate
+                        ? new Date(invoice.deliveryDate).toLocaleDateString('en-IN')
+                        : '-' %>
+                </p>
+
+                <p>
+                    <strong>Delivery Time:</strong>
+                    <%= invoice.deliveryTime || '-' %>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ITEMS -->
+
+    <div class="section">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>#</th>
+                    <th>Item Name</th>
+                    <th>Qty</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <% let subTotal = 0; %>
+
+                <% invoice.items.forEach((item,index)=>{ %>
+
+                    <% const amount = item.quantity * item.rate; %>
+
+                    <% subTotal += amount; %>
+
+                    <tr>
+
+                        <td>
+                            <%= index + 1 %>
+                        </td>
+
+                        <td>
+                            <%= item.itemName %>
+                        </td>
+
+                        <td>
+                            <%= item.quantity %>
+                        </td>
+
+                        <td>
+                            ₹<%= item.rate.toFixed(2) %>
+                        </td>
+
+                        <td>
+                            ₹<%= amount.toFixed(2) %>
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- TOTALS -->
+
+    <%
+
+        const gstRate = 18;
+
+        const gstAmount =
+            (subTotal * gstRate) / 100;
+
+        const cgst =
+            gstAmount / 2;
+
+        const sgst =
+            gstAmount / 2;
+
+        const grandTotal =
+            subTotal + gstAmount;
+
+    %>
+
+    <table class="summary">
+
+        <tr>
+
+            <td>
+                Sub Total
+            </td>
+
+            <td class="text-right">
+                ₹<%= subTotal.toFixed(2) %>
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+                CGST (9%)
+            </td>
+
+            <td class="text-right">
+                ₹<%= cgst.toFixed(2) %>
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+                SGST (9%)
+            </td>
+
+            <td class="text-right">
+                ₹<%= sgst.toFixed(2) %>
+            </td>
+
+        </tr>
+
+        <tr class="grand-total">
+
+            <td>
+                Grand Total
+            </td>
+
+            <td class="text-right">
+                ₹<%= grandTotal.toFixed(2) %>
+            </td>
+
+        </tr>
+
+    </table>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <h4>
+            Terms & Conditions
+        </h4>
+
+        <ul>
+
+            <li>
+                Goods once delivered will not be taken back.
+            </li>
+
+            <li>
+                Any complaint should be reported within 24 hours.
+            </li>
+
+            <li>
+                UClean is not responsible for colour bleed or fabric damage caused by manufacturing defects.
+            </li>
+
+            <li>
+                Subject to local jurisdiction.
+            </li>
+
+        </ul>
+
+        <p class="small">
+            This is a system generated invoice and does not require a signature.
+        </p>
+
+    </div>
+
+</body>
+</html>
