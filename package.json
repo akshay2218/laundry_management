@@ -4,7 +4,7 @@
     "description": "Laundry Management System",
     "main": "app.js",
     "scripts": {
-        "start": "nodemon app.js",
+        "start": "node app.js",
         "dev": "cp .env.example .env\n nodemon app.js"
     },
     "dependencies": {
