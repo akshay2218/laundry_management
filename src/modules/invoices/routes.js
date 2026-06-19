@@ -43,5 +43,12 @@ router.get(
   controller.details
 );
 
+router.get(
+  "/invoices/:id/download",
+  auth,
+  controller.downloadPdf
+);
+
+
 module.exports =
   router;

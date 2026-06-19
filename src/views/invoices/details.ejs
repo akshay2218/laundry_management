@@ -4,28 +4,32 @@
 
     <div class="card-body">
 
-      <div class="d-flex justify-content-between mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
-
           <h3>
-
-            Invoice
-
-            <%= invoice.invoiceNumber %>
-
+            Invoice <%= invoice.invoiceNumber %>
           </h3>
-
-          <p>
-
+      
+          <p class="mb-0">
             Generated:
-
-            <%= new Date(invoice.generatedAt) .toLocaleString() %>
-
+            <%= new Date(invoice.generatedAt).toLocaleString() %>
           </p>
-
         </div>
-
+      
+        <div>
+      
+          <a
+            href="/invoices/<%= invoice._id %>/download"
+            class="btn btn-success">
+      
+            <i class="bi bi-download"></i>
+            Download PDF
+      
+          </a>
+      
+        </div>
+      
       </div>
 
       <table id="dataTable" class="table table-hover">

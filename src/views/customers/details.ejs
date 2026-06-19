@@ -75,6 +75,15 @@
   
             <% }) %>
   
+            <button
+  type="button"
+  class="btn btn-outline-success w-100"
+  data-bs-toggle="modal"
+  data-bs-target="#addressModal">
+
+  + Add New Address
+
+</button>
           </div>
   
         </div>
@@ -92,7 +101,7 @@
   
               <h5>
   
-                Customer Summary
+                Order Summary
   
               </h5>
   
@@ -151,3 +160,5 @@
     </div>
   
   </div>
+
+  <%- include('../partials/address-modal') %>

@@ -1,0 +1,224 @@
+  <!-- Add Address Modal -->
+  <div
+  class="modal fade"
+  id="addressModal"
+  tabindex="-1"
+  aria-labelledby="addressModalLabel"
+  aria-hidden="true">
+  
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+  
+      <div class="modal-header border-0 pb-0">
+        <h4
+          class="modal-title fw-bold text-success mx-auto"
+          id="addressModalLabel">
+          ADD ADDRESS
+        </h4>
+  
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close">
+        </button>
+      </div>
+  
+      <form
+        action="/customers/<%= customer._id %>/address" 
+        method="POST">
+  
+        <input
+          type="hidden"
+          name="customerId"
+          value="<%= customer._id %>">
+  
+        <div class="modal-body">
+  
+          <!-- House No -->
+          <div class="mb-3">
+            <input
+              type="text"
+              name="houseNo"
+              class="form-control"
+              placeholder="House/ flat number/ Floor No"
+              required>
+          </div>
+  
+          <!-- Apartment -->
+          <div class="mb-3">
+            <input
+              type="text"
+              name="apartment"
+              class="form-control"
+              placeholder="Apartment/ Road / Area"
+              required>
+          </div>
+  
+          <!-- Pincode -->
+          <div class="mb-3">
+            <input
+              type="text"
+              name="pincode"
+              maxlength="6"
+              class="form-control"
+              placeholder="Pin/Postal Code"
+              required>
+          </div>
+  
+          <!-- Landmark -->
+          <div class="mb-3">
+            <input
+              type="text"
+              name="landmark"
+              class="form-control"
+              placeholder="Landmark">
+          </div>
+  
+          <!-- Contact Person -->
+          <div class="mb-3">
+            <input
+              type="text"
+              name="contactPerson"
+              class="form-control"
+              placeholder="Contact Person Name">
+          </div>
+  
+          <!-- Contact Number -->
+          <div class="mb-3">
+            <input
+              type="text"
+              name="contactPhone"
+              maxlength="10"
+              class="form-control"
+              placeholder="Contact person number">
+          </div>
+  
+          <!-- Address Type -->
+          <div class="mb-2 fw-semibold">
+            Address Type
+          </div>
+  
+          <div class="row g-2">
+  
+            <div class="col">
+              <input
+                type="radio"
+                class="btn-check"
+                name="addressType"
+                id="home"
+                value="HOME"
+                checked>
+  
+              <label
+                class="btn btn-outline-success w-100 py-3"
+                for="home">
+  
+                <i class="bi bi-house-door d-block fs-5"></i>
+                Home
+  
+              </label>
+            </div>
+  
+            <div class="col">
+              <input
+                type="radio"
+                class="btn-check"
+                name="addressType"
+                id="work"
+                value="WORK">
+  
+              <label
+                class="btn btn-outline-secondary w-100 py-3"
+                for="work">
+  
+                <i class="bi bi-briefcase d-block fs-5"></i>
+                Work
+  
+              </label>
+            </div>
+  
+            <div class="col">
+              <input
+                type="radio"
+                class="btn-check"
+                name="addressType"
+                id="family"
+                value="FAMILY">
+  
+              <label
+                class="btn btn-outline-secondary w-100 py-3"
+                for="family">
+  
+                <i class="bi bi-people d-block fs-5"></i>
+                Family
+  
+              </label>
+            </div>
+  
+            <div class="col">
+              <input
+                type="radio"
+                class="btn-check"
+                name="addressType"
+                id="hotel"
+                value="HOTEL">
+  
+              <label
+                class="btn btn-outline-secondary w-100 py-3"
+                for="hotel">
+  
+                <i class="bi bi-building d-block fs-5"></i>
+                Hotel
+  
+              </label>
+            </div>
+  
+            <div class="col">
+              <input
+                type="radio"
+                class="btn-check"
+                name="addressType"
+                id="others"
+                value="OTHERS">
+  
+              <label
+                class="btn btn-outline-secondary w-100 py-3"
+                for="others">
+  
+                <i class="bi bi-person d-block fs-5"></i>
+                Others
+  
+              </label>
+            </div>
+  
+          </div>
+  
+        </div>
+  
+        <div class="modal-footer border-0">
+  
+          <button
+            type="button"
+            class="btn btn-link text-secondary text-decoration-none"
+            data-bs-dismiss="modal">
+  
+            CANCEL
+  
+          </button>
+  
+          <button
+            type="submit"
+            class="btn btn-success px-4">
+  
+            Add
+  
+          </button>
+  
+        </div>
+  
+      </form>
+  
+    </div>
+  </div>
+  </div>

@@ -1,0 +1,32 @@
+{
+    "Dry Cleaning": [
+      {
+        "itemName": "Shirt",
+        "price": 79
+      },
+      {
+        "itemName": "Pant",
+        "price": 89
+      },
+      {
+        "itemName": "Blazer",
+        "price": 399
+      }
+    ],
+    "Steam Press": [
+      {
+        "itemName": "Shirt",
+        "price": 25
+      },
+      {
+        "itemName": "Pant",
+        "price": 30
+      }
+    ],
+    "Wash & Fold": [
+      {
+        "itemName": "Laundry Bag",
+        "price": 89
+      }
+    ]
+  }
