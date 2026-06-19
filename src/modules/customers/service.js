@@ -21,8 +21,6 @@ class CustomerService {
 
     return Customer.find(query)
       .sort({ createdAt: -1 })
-      .skip(offset)
-      .limit(pageSize)
   }
 
   async getById(id) {

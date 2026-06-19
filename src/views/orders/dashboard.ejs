@@ -115,7 +115,7 @@ class="form-control datepicker"
       <li class="nav-item">
   
         <a
-          class="nav-link <%= !req.query.status ? 'active' : '' %>"
+          class="nav-link <%= !query?.status ? 'active' : '' %>"
           href="/dashboard">
   
           All
@@ -127,7 +127,7 @@ class="form-control datepicker"
       <li class="nav-item">
   
         <a
-          class="nav-link <%= req.query.status === 'NEW' ? 'active' : '' %>"
+          class="nav-link <%= query?.status === 'NEW' ? 'active' : '' %>"
           href="/dashboard?status=NEW">
   
           New Orders
@@ -139,7 +139,7 @@ class="form-control datepicker"
       <li class="nav-item">
   
         <a
-          class="nav-link <%= req.query.status === 'IN_PROCESS' ? 'active' : '' %>"
+          class="nav-link <%= query?.status === 'IN_PROCESS' ? 'active' : '' %>"
           href="/dashboard?status=IN_PROCESS">
   
           In Process
@@ -151,7 +151,7 @@ class="form-control datepicker"
       <li class="nav-item">
   
         <a
-          class="nav-link <%= req.query.status === 'READY' ? 'active' : '' %>"
+          class="nav-link <%= query?.status === 'READY' ? 'active' : '' %>"
           href="/dashboard?status=READY">
   
           Ready
@@ -163,7 +163,7 @@ class="form-control datepicker"
       <li class="nav-item">
   
         <a
-          class="nav-link <%= req.query.status === 'ASSIGNED' ? 'active' : '' %>"
+          class="nav-link <%= query?.status === 'ASSIGNED' ? 'active' : '' %>"
           href="/dashboard?status=ASSIGNED">
   
           Assigned
@@ -175,7 +175,7 @@ class="form-control datepicker"
       <li class="nav-item">
   
         <a
-          class="nav-link <%= req.query.status === 'DELIVERED' ? 'active' : '' %>"
+          class="nav-link <%= query?.status === 'DELIVERED' ? 'active' : '' %>"
           href="/dashboard?status=DELIVERED">
   
           Delivered

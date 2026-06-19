@@ -131,7 +131,56 @@
               Invoice Summary
   
             </h5>
-  
+            <div class="mb-3">
+              <label>Delivery Date</label>
+          
+              <input
+                  type="date"
+                  class="form-control"
+                  name="deliveryDate"
+                  form="invoiceForm"
+                  required>
+          </div>
+          
+          <div class="mb-3">
+              <label>Delivery Time</label>
+          
+              <input
+                  type="text"
+                  class="form-control"
+                  name="deliveryTime"
+                  form="invoiceForm"
+                  placeholder="5 PM - 7 PM">
+          </div>
+          
+          <div class="mb-3">
+              <label>Challan No</label>
+          
+              <input
+                  type="text"
+                  class="form-control"
+                  name="challanNumber"
+                  form="invoiceForm">
+          </div>
+          
+          <div class="mb-3">
+              <label>Customer GST</label>
+          
+              <input
+                  type="text"
+                  class="form-control"
+                  name="customerGST"
+                  form="invoiceForm">
+          </div>
+          
+          <div class="mb-3">
+              <label>Comments</label>
+          
+              <textarea
+                  class="form-control"
+                  name="comments"
+                  form="invoiceForm"></textarea>
+          </div>
             <div class="customer-box">
   
               <strong>
@@ -257,6 +306,11 @@
                 type="hidden"
                 name="orderId"
                 value="<%= order._id %>">
+
+                <input
+                type="hidden"
+                name="customerId"
+                value="<%= order.customerId._id %>">
   
               <input
                 type="hidden"

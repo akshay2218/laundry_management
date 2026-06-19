@@ -22,7 +22,7 @@
       <span
         class="badge bg-primary">
   
-        <%= req.user?.role || '' %>
+        <%= user?.role || '' %>
   
       </span>
   
@@ -32,7 +32,7 @@
           class="btn btn-light dropdown-toggle"
           data-bs-toggle="dropdown">
   
-          <%= req.user?.name || 'User' %>
+          <%= user?.name || 'User' %>
   
         </button>
   

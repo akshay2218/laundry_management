@@ -14,12 +14,15 @@ const sessionConfig = require("./src/config/session");
 const expressLayouts =
   require("express-ejs-layouts");
 
-
-
-
 const app = express();
 
 connectDB();
+
+/*
+|--------------------------------------------------------------------------
+| View Engine
+|--------------------------------------------------------------------------
+*/
 
 app.set(
   "view engine",
@@ -28,7 +31,10 @@ app.set(
 
 app.set(
   "views",
-  path.join(__dirname, "src/views")
+  path.join(
+    __dirname,
+    "src/views"
+  )
 );
 
 app.set(
@@ -36,39 +42,94 @@ app.set(
   "layouts/main"
 );
 
-app.use(express.urlencoded({
-  extended: true
-}));
+/*
+|--------------------------------------------------------------------------
+| Middlewares
+|--------------------------------------------------------------------------
+*/
+
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
 app.use(express.json());
+
 app.use(expressLayouts);
 
 app.use(
   express.static(
-    path.join(__dirname, "public")
+    path.join(
+      __dirname,
+      "public"
+    )
   )
 );
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false
+  })
+);
 
 app.use(
   rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs:
+      15 * 60 * 1000,
+
     max: 100
   })
 );
 
 app.use(sessionConfig);
 
-app.use(passport.initialize());
+app.use(
+  passport.initialize()
+);
 
-app.use(passport.session());
+app.use(
+  passport.session()
+);
 
-// app.use(
-//   require(
-//     "./src/modules/auth/routes"
-//   )
-// );
+/*
+|--------------------------------------------------------------------------
+| Global View Variables
+|--------------------------------------------------------------------------
+*/
+
+app.use((req, res, next) => {
+
+  res.locals.user =
+    req.user || null;
+
+  res.locals.appName =
+    "Laundry Management";
+
+  res.locals.success =
+    req.flash
+      ? req.flash("success")
+      : null;
+
+  res.locals.error =
+    req.flash
+      ? req.flash("error")
+      : null;
+
+  next();
+});
+
+/*
+|--------------------------------------------------------------------------
+| Routes
+|--------------------------------------------------------------------------
+*/
+
+app.use(
+  require(
+    "./src/modules/auth/routes"
+  )
+);
 
 app.use(
   require(
@@ -89,31 +150,68 @@ app.use(
 );
 
 app.use(
-  (req, res, next) => {
+  require(
+    "./src/modules/pricing/routes"
+  )
+);
 
-    res.locals.req = req;
+app.use(
+  require(
+    "./src/modules/coupons/routes"
+  )
+);
 
-    res.locals.user =
-      req.user;
+app.use(
+  require(
+    "./src/modules/reports/routes"
+  )
+);
 
-    next();
+/*
+|--------------------------------------------------------------------------
+| Default Route
+|--------------------------------------------------------------------------
+*/
+
+app.get(
+  "/",
+  (req, res) => {
+    res.redirect(
+      "/dashboard"
+    );
   }
 );
 
-app.locals.appName =
-  "Laundry Management";
+/*
+|--------------------------------------------------------------------------
+| Error Pages
+|--------------------------------------------------------------------------
+*/
 
-app.get("/", (req, res) => {
-  res.redirect("/dashboard");
-});
+app.use(
+  (req, res) => {
 
-// app.use(
-//   require("./src/modules/auth/routes")
-// );
+    res.status(404)
+      .render(
+        "errors/404",
+        {
+          title:
+            "Page Not Found"
+        }
+      );
+  }
+);
+
+/*
+|--------------------------------------------------------------------------
+| Start Server
+|--------------------------------------------------------------------------
+*/
 
 app.listen(
   process.env.PORT || 3000,
   () => {
+
     console.log(
       "Server running"
     );

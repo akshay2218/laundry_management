@@ -14,6 +14,10 @@ const statusSchema =
         type:
           mongoose.Schema.Types.ObjectId,
         ref: "User"
+      },
+      changedByName:{
+        type: String,
+        ref: "User"
       }
     },
     {
@@ -52,7 +56,7 @@ const orderSchema =
         ]
       },
 
-      pickupDate: Date,
+      pickupDate: String,
 
       pickupTime: String,
 
