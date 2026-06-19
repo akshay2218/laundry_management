@@ -1,238 +1,267 @@
 const {
-    validationResult
-  } = require(
-    "express-validator"
-  );
-  
-  const service =
-    require("./service");
-  
-  class CustomerController {
-  
-    async list(
-      req,
-      res,
-      next
-    ) {
-      try {
-  
-        const customers =
-          await service.getCustomers(
-            req.query
-          );
-  
-        res.render(
-          "customers/index",
-          {
-            title:
-              "Customers",
-            customers
-          }
+  validationResult
+} = require(
+  "express-validator"
+);
+
+const service =
+  require("./service");
+const Order =
+  require("../orders/order.model");
+class CustomerController {
+
+  async list(
+    req,
+    res,
+    next
+  ) {
+    try {
+
+      const customers =
+        await service.getCustomers(
+          req.query
         );
-  
-      } catch (err) {
-        next(err);
-      }
-    }
-  
-    createPage(
-      req,
-      res
-    ) {
+
       res.render(
-        "customers/create",
+        "customers/index",
         {
           title:
-            "Add Customer",
-          errors: [],
-          old: {}
+            "Customers",
+          customers
         }
       );
+
+    } catch (err) {
+      next(err);
     }
-  
-    async create(
-      req,
-      res,
-      next
-    ) {
-      try {
-  
-        const errors =
-          validationResult(req);
-  
-        if (
-          !errors.isEmpty()
-        ) {
-          return res.render(
-            "customers/create",
-            {
-              title:
-                "Add Customer",
-              errors:
-                errors.array(),
-              old:
-                req.body
-            }
-          );
-        }
-  
-        const customer =
-          await service.create(
-            req.body
-          );
-  
-        return res.redirect(
-          `/customers/${customer._id}`
-        );
-  
-      } catch (err) {
-        next(err);
+  }
+
+  createPage(
+    req,
+    res
+  ) {
+    res.render(
+      "customers/create",
+      {
+        title:
+          "Add Customer",
+        errors: [],
+        old: {}
       }
-    }
-  
-    async details(
-      req,
-      res,
-      next
-    ) {
-      try {
-  
-        const customer =
-          await service.getById(
-            req.params.id
-          );
-  
-        const addresses =
-          await service.getAddresses(
-            req.params.id
-          );
-  
-        res.render(
-          "customers/details",
+    );
+  }
+
+  async create(
+    req,
+    res,
+    next
+  ) {
+    try {
+
+      const errors =
+        validationResult(req);
+
+      if (
+        !errors.isEmpty()
+      ) {
+        return res.render(
+          "customers/create",
           {
             title:
-              "Customer Details",
-            customer,
-            addresses
+              "Add Customer",
+            errors:
+              errors.array(),
+            old:
+              req.body
           }
         );
-  
-      } catch (err) {
-        next(err);
       }
+
+      const customer =
+        await service.create(
+          req.body
+        );
+
+      return res.redirect(
+        `/customers/${customer._id}`
+      );
+
+    } catch (err) {
+      next(err);
     }
+  }
+
+  async details(
+    req,
+    res,
+    next
+  ) {
+    try {
   
-    async editPage(
-      req,
-      res,
-      next
-    ) {
-      try {
+      const customer =
+        await service.getById(
+          req.params.id
+        );
   
-        const customer =
-          await service.getById(
-            req.params.id
-          );
+      const addresses =
+        await service.getAddresses(
+          req.params.id
+        );
   
-        res.render(
+      const orders =
+        await Order.find({
+          customerId: customer._id
+        }).sort({
+          createdAt: -1
+        });
+  
+      const totalOrders =
+        orders.length;
+  
+      const lifetimeValue =
+        orders.reduce(
+          (sum, order) =>
+            sum +
+            (order.grandTotal || 0),
+          0
+        );
+  
+      res.render(
+        "customers/details",
+        {
+          title:
+            "Customer Details",
+  
+          customer,
+  
+          addresses,
+  
+          orders,
+  
+          totalOrders,
+  
+          lifetimeValue
+        }
+      );
+  
+    } catch (err) {
+  
+      next(err);
+  
+    }
+  }
+
+  async editPage(
+    req,
+    res,
+    next
+  ) {
+    try {
+
+      const customer =
+        await service.getById(
+          req.params.id
+        );
+
+      res.render(
+        "customers/edit",
+        {
+          title:
+            "Edit Customer",
+          customer,
+          errors: []
+        }
+      );
+
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async update(
+    req,
+    res,
+    next
+  ) {
+    try {
+
+      const errors =
+        validationResult(req);
+
+      if (
+        !errors.isEmpty()
+      ) {
+        return res.render(
           "customers/edit",
           {
             title:
               "Edit Customer",
-            customer,
-            errors: []
+            customer:
+              req.body,
+            errors:
+              errors.array()
           }
         );
-  
-      } catch (err) {
-        next(err);
       }
-    }
-  
-    async update(
-      req,
-      res,
-      next
-    ) {
-      try {
-  
-        const errors =
-          validationResult(req);
-  
-        if (
-          !errors.isEmpty()
-        ) {
-          return res.render(
-            "customers/edit",
-            {
-              title:
-                "Edit Customer",
-              customer:
-                req.body,
-              errors:
-                errors.array()
-            }
-          );
-        }
-  
-        await service.update(
-          req.params.id,
-          req.body
-        );
-  
-        res.redirect(
-          `/customers/${req.params.id}`
-        );
-  
-      } catch (err) {
-        next(err);
-      }
-    }
-  
-    async createAddress(
-      req,
-      res,
-      next
-    ) {
-      try {
-  
-        await service.createAddress(
-          {
-            ...req.body,
-            customerId:
-              req.params.id
-          }
-        );
-  
-        res.redirect(
-          `/customers/${req.params.id}`
-        );
-  
-      } catch (err) {
-        next(err);
-      }
-    }
-  
-    async deleteAddress(
-      req,
-      res,
-      next
-    ) {
-      try {
-  
-        await service.deleteAddress(
-          req.params.addressId
-        );
-  
-        res.redirect(
-          `/customers/${req.params.id}`
-        );
-  
-      } catch (err) {
-        next(err);
-      }
+
+      await service.update(
+        req.params.id,
+        req.body
+      );
+
+      res.redirect(
+        `/customers/${req.params.id}`
+      );
+
+    } catch (err) {
+      next(err);
     }
   }
-  
-  module.exports =
-    new CustomerController();
+
+  async createAddress(
+    req,
+    res,
+    next
+  ) {
+    try {
+
+      await service.createAddress(
+        {
+          ...req.body,
+          customerId:
+            req.params.id
+        }
+      );
+
+      res.redirect(
+        `/customers/${req.params.id}`
+      );
+
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteAddress(
+    req,
+    res,
+    next
+  ) {
+    try {
+
+      await service.deleteAddress(
+        req.params.addressId
+      );
+
+      res.redirect(
+        `/customers/${req.params.id}`
+      );
+
+    } catch (err) {
+      next(err);
+    }
+  }
+}
+
+module.exports =
+  new CustomerController();

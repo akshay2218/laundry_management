@@ -89,7 +89,7 @@ class OrderController {
       const customerId =
         req.body.customerId;
       console.log("customerId", customerId);
-      
+
       if (!customerId) {
 
         return res.redirect(
@@ -102,29 +102,41 @@ class OrderController {
           customerId
         );
 
-        const order =
-          await service.createOrder(
-            req.body,
-            customerId
-          );
+      const order =
+        await service.createOrder(
+          req.body,
+          customerId
+        );
+      await Customer.findByIdAndUpdate(
+          customerId,
+          {
+            $inc: {
+              totalOrders: 1
+            }
+          }
+        );
+        
+      const addresses =
+        await service.getCustomerAddresses(
+          customerId
+        );
 
-          const addresses =
-          await service.getCustomerAddresses(
-            customerId
-          );
+      // res.render(
+      //   "orders/create",
+      //   {
+      //     title:
+      //       "Create Order",
 
-      res.render(
-        "orders/create",
-        {
-          title:
-            "Create Order",
+      //     customer,
 
-          customer,
+      //     order,
+      //     addresses,
+      //     errors: []
+      //   }
+      // );
 
-          order,
-          addresses,
-          errors: []
-        }
+      return res.redirect(
+        `/customers/${customerId}`
       );
 
     } catch (err) {
@@ -175,13 +187,14 @@ class OrderController {
   ) {
 
     try {
-
+      console.log("user details", req.user);
+      
       await service.updateStatus(
         req.params.id,
 
         req.body.status,
 
-        req.user._id
+        req.user
       );
 
       res.redirect(

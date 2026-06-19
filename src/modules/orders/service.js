@@ -66,7 +66,7 @@ class OrderService {
   async updateStatus(
     orderId,
     status,
-    userId
+    user
   ) {
 
     const order =
@@ -78,7 +78,8 @@ class OrderService {
 
     order.statusHistory.push({
       status,
-      changedBy: userId
+      changedBy: user.userId,
+      changedByName: user.name
     });
 
     return order.save();

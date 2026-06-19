@@ -172,8 +172,8 @@ class InvoiceService {
 
     const invoiceNumber =
       `INV${Date.now()}`;
-
       return Invoice.create({
+        customerId: payload.customerId,
         invoiceNumber,
       
         orderId: payload.orderId,

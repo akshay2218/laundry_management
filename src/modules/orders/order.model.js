@@ -14,6 +14,10 @@ const statusSchema =
         type:
           mongoose.Schema.Types.ObjectId,
         ref: "User"
+      },
+      changedByName:{
+        type: String,
+        ref: "User"
       }
     },
     {

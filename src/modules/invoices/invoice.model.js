@@ -26,7 +26,10 @@ const itemSchema =
       type: String,
       unique: true
     },
-  
+    customerId: {
+      type: String,
+      ref: "Customer"
+    },
     orderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order"
