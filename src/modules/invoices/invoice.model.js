@@ -41,7 +41,14 @@ const itemSchema =
     },
   
     items: [itemSchema],
-  
+    customItems: [
+      {
+          itemName: String,
+          quantity: Number,
+          price: Number,
+          notes: String
+      }
+      ],
     subtotal: Number,
     discount: Number,
     taxableAmount: Number,

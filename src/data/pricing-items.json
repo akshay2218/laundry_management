@@ -1,32 +1,73 @@
 {
-    "Dry Cleaning": [
-      {
-        "itemName": "Shirt",
-        "price": 79
-      },
-      {
-        "itemName": "Pant",
-        "price": 89
-      },
-      {
-        "itemName": "Blazer",
-        "price": 399
-      }
-    ],
-    "Steam Press": [
-      {
-        "itemName": "Shirt",
-        "price": 25
-      },
-      {
-        "itemName": "Pant",
-        "price": 30
-      }
-    ],
-    "Wash & Fold": [
-      {
-        "itemName": "Laundry Bag",
-        "price": 89
-      }
-    ]
-  }
+  "Dry Cleaning": [
+    { "itemName": "Shirt", "price": 109 },
+    { "itemName": "Trouser", "price": 129 },
+    { "itemName": "Coat", "price": 249 },
+    { "itemName": "Jacket", "price": 249 },
+    { "itemName": "Suit - 2 Pc", "price": 359 },
+    { "itemName": "Suit - 3 Pc", "price": 449 },
+    { "itemName": "Kurta", "price": 119 },
+    { "itemName": "Salwar", "price": 119 },
+    { "itemName": "Saree", "price": 199 },
+    { "itemName": "Dress", "price": 219 },
+    { "itemName": "Lehenga", "price": 359 }
+  ],
+
+  "Steam Press": [
+    { "itemName": "Steam Iron", "price": 25 }
+  ],
+
+  "Wash & Fold": [
+    { "itemName": "Wash & Fold (Per Kg)", "price": 109 }
+  ],
+
+  "Wash & Iron": [
+    { "itemName": "Wash & Iron (Per Kg)", "price": 149 }
+  ],
+
+  "Home Care": [
+    { "itemName": "Blanket Single", "price": 349 },
+    { "itemName": "Blanket Double", "price": 449 },
+    { "itemName": "Bedsheet Single", "price": 119 },
+    { "itemName": "Bedsheet Double", "price": 199 },
+    { "itemName": "Quilt Single", "price": 449 },
+    { "itemName": "Quilt Double", "price": 549 },
+    { "itemName": "Curtain Without Lining", "price": 239 },
+    { "itemName": "Curtain With Lining", "price": 349 },
+    { "itemName": "Sports Shoes", "price": 349 },
+    { "itemName": "Premium Brand Shoes", "price": 400 },
+    { "itemName": "Suit Leather", "price": 459 },
+    { "itemName": "Boot", "price": 599 }
+  ],
+
+  "Comforters": [
+    { "itemName": "Light Comforter", "price": 149 },
+    { "itemName": "Heavy Comforter", "price": 199 },
+    { "itemName": "Very Heavy Comforter", "price": 259 },
+    { "itemName": "Very Very Heavy Comforter", "price": 349 }
+  ],
+
+  "Soft Toys": [
+    { "itemName": "Soft Toy Small", "price": 119 },
+    { "itemName": "Soft Toy Medium", "price": 199 },
+    { "itemName": "Soft Toy Large", "price": 299 }
+  ],
+
+  "Purse": [
+    { "itemName": "Purse Small", "price": 149 },
+    { "itemName": "Purse Medium", "price": 249 },
+    { "itemName": "Purse Large", "price": 349 }
+  ],
+
+  "Sofa Cleaning": [
+    { "itemName": "1 Seater Cotton", "price": 249 },
+    { "itemName": "1 Seater Velvet", "price": 299 },
+    { "itemName": "1 Seater Leather", "price": 449 }
+  ],
+
+  "Suitcase": [
+    { "itemName": "Suitcase Small", "price": 249 },
+    { "itemName": "Suitcase Medium", "price": 399 },
+    { "itemName": "Suitcase Large", "price": 499 }
+  ]
+}

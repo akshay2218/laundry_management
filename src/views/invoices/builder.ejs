@@ -1,337 +1,341 @@
 <div class="container-fluid">
+  <div class="d-flex justify-content-between mb-3">
 
-    <div class="row">
-  
-      <!-- LEFT PANEL -->
-  
-      <div class="col-lg-8">
-  
-        <div class="card mb-4">
-  
-          <div class="card-body">
-  
-            <div class="d-flex justify-content-between align-items-center mb-3">
-  
-              <h4>
-                Invoice Builder
-              </h4>
-  
-              <span class="badge bg-primary">
-                <%= order.orderNumber %>
-              </span>
-  
-            </div>
-  
-            <!-- SERVICE TABS -->
-  
-            <ul class="nav nav-pills mb-4">
-  
-              <li class="nav-item">
-                <button
-                  class="nav-link active">
-                  Dry Cleaning
-                </button>
-              </li>
-  
-              <li class="nav-item">
-                <button
-                  class="nav-link">
-                  Steam Press
-                </button>
-              </li>
-  
-              <li class="nav-item">
-                <button
-                  class="nav-link">
-                  Wash & Fold
-                </button>
-              </li>
-  
-              <li class="nav-item">
-                <button
-                  class="nav-link">
-                  Wash & Iron
-                </button>
-              </li>
-  
-            </ul>
-  
-            <!-- ITEM GRID -->
-  
-            <div class="row">
-  
-              <% items.forEach(item => { %>
-  
-              <div class="col-md-4 mb-3">
-  
-                <div class="item-card">
-  
-                  <h6>
-                    <%= item.itemName %>
-                  </h6>
-  
-                  <div class="price">
-  
-                    ₹<%= item.price %>
-  
-                  </div>
-  
-                  <div class="qty-controls">
-  
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-outline-secondary decrease">
-  
-                      -
-  
-                    </button>
-  
-                    <input
-                      type="number"
-                      min="0"
-                      value="0"
-                      class="qty-input"
-                      data-name="<%= item.itemName %>"
-                      data-price="<%= item.price %>">
-  
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-outline-secondary increase">
-  
-                      +
-  
-                    </button>
-  
-                  </div>
-  
-                </div>
-  
-              </div>
-  
-              <% }) %>
-  
-            </div>
-  
-          </div>
-  
-        </div>
-  
-      </div>
-  
-      <!-- RIGHT PANEL -->
-  
-      <div class="col-lg-4">
-  
-        <div class="card invoice-summary">
-  
-          <div class="card-body">
-  
-            <h5 class="mb-3">
-  
-              Invoice Summary
-  
-            </h5>
-            <div class="mb-3">
-              <label>Delivery Date</label>
-          
-              <input
-                  type="date"
-                  class="form-control"
-                  name="deliveryDate"
-                  form="invoiceForm"
-                  required>
-          </div>
-          
-          <div class="mb-3">
-              <label>Delivery Time</label>
-          
-              <input
-                  type="text"
-                  class="form-control"
-                  name="deliveryTime"
-                  form="invoiceForm"
-                  placeholder="5 PM - 7 PM">
-          </div>
-          
-          <div class="mb-3">
-              <label>Challan No</label>
-          
-              <input
-                  type="text"
-                  class="form-control"
-                  name="challanNumber"
-                  form="invoiceForm">
-          </div>
-          
-          <div class="mb-3">
-              <label>Customer GST</label>
-          
-              <input
-                  type="text"
-                  class="form-control"
-                  name="customerGST"
-                  form="invoiceForm">
-          </div>
-          
-          <div class="mb-3">
-              <label>Comments</label>
-          
-              <textarea
-                  class="form-control"
-                  name="comments"
-                  form="invoiceForm"></textarea>
-          </div>
-            <div class="customer-box">
-  
-              <strong>
-  
-                <%= order.customerId.name %>
-  
-              </strong>
-  
-              <div>
-  
-                <%= order.customerId.phone %>
-  
-              </div>
-  
-            </div>
-  
-            <hr>
-  
-            <div
-              id="invoiceItems">
-  
-              <p class="text-muted">
-  
-                No items selected
-  
-              </p>
-  
-            </div>
-  
-            <hr>
-  
-            <div class="mb-3">
-  
-              <label class="form-label">
-  
-                Coupon Code
-  
-              </label>
-  
-              <input
-                type="text"
-                class="form-control"
-                id="couponCode">
-  
-            </div>
-  
-            <div class="mb-3">
-  
-              <label class="form-label">
-  
-                Delivery Charge
-  
-              </label>
-  
-              <input
-                type="number"
-                value="0"
-                class="form-control"
-                id="deliveryCharge">
-  
-            </div>
-  
-            <div class="mb-3">
-  
-              <label class="form-label">
-  
-                Express Charge
-  
-              </label>
-  
-              <input
-                type="number"
-                value="0"
-                class="form-control"
-                id="expressCharge">
-  
-            </div>
-  
-            <hr>
-  
-            <div class="summary-row">
-  
-              <span>Subtotal</span>
-  
-              <strong id="subtotal">
-  
-                ₹0
-  
-              </strong>
-  
-            </div>
-  
-            <div class="summary-row">
-  
-              <span>GST</span>
-  
-              <strong id="gst">
-  
-                ₹0
-  
-              </strong>
-  
-            </div>
-  
-            <div class="summary-row total">
-  
-              <span>Total</span>
-  
-              <strong id="total">
-  
-                ₹0
-  
-              </strong>
-  
-            </div>
-  
-            <form
-              id="invoiceForm"
-              action="/invoices/generate"
-              method="POST">
-  
-              <input
-                type="hidden"
-                name="orderId"
-                value="<%= order._id %>">
+    <input type="text" class="form-control me-2" placeholder="Search Item">
 
-                <input
-                type="hidden"
-                name="customerId"
-                value="<%= order.customerId._id %>">
-  
-              <input
-                type="hidden"
-                name="items"
-                id="invoicePayload">
-  
-              <button
-                class="btn btn-success w-100 mt-4">
-  
-                Generate Invoice
-  
-              </button>
-  
-            </form>
-  
-          </div>
-  
-        </div>
-  
-      </div>
-  
-    </div>
-  
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#customClothModal">
+
+      + Add Custom Cloth
+
+    </button>
+
   </div>
+  <div class="row">
+
+    <!-- LEFT PANEL -->
+
+    <div class="col-lg-8">
+
+      <div class="card mb-4">
+
+        <div class="card-body">
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h4>
+              Invoice Builder
+            </h4>
+
+            <span class="badge bg-primary">
+              <%= order.orderNumber %>
+            </span>
+
+          </div>
+
+          <!-- SERVICE TABS -->
+
+          <ul class="nav nav-pills mb-4" id="serviceTabs">
+
+            <% Object.keys(pricingData).forEach((category,index)=>{ %>
+
+              <li class="nav-item">
+
+                <button class="nav-link <%= index===0 ? 'active' : '' %> service-tab" type="button"
+                  data-category="<%= category %>">
+
+                  <%= category %>
+
+                </button>
+
+              </li>
+
+              <% }) %>
+
+          </ul>
+
+          <!-- ITEM GRID -->
+
+          <div class="row">
+
+            <div class="row" id="itemsContainer">
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+
+    <div class="col-lg-4">
+
+      <div class="card invoice-summary">
+
+        <div class="card-body">
+
+          <h5 class="mb-3">
+
+            Invoice Summary
+
+          </h5>
+          <div class="mb-3">
+            <label>Delivery Date</label>
+
+            <input type="date" class="form-control" name="deliveryDate" form="invoiceForm" required>
+          </div>
+
+          <div class="mb-3">
+            <label>Delivery Time</label>
+
+            <input type="text" class="form-control" name="deliveryTime" form="invoiceForm" placeholder="5 PM - 7 PM">
+          </div>
+
+          <div class="mb-3">
+            <label>Challan No</label>
+
+            <input type="text" class="form-control" name="challanNumber" form="invoiceForm">
+          </div>
+
+          <div class="mb-3">
+            <label>Customer GST</label>
+
+            <input type="text" class="form-control" name="customerGST" form="invoiceForm">
+          </div>
+
+          <div class="mb-3">
+            <label>Comments</label>
+
+            <textarea class="form-control" name="comments" form="invoiceForm"></textarea>
+          </div>
+          <div class="customer-box">
+
+            <strong>
+
+              <%= order.customerId.name %>
+
+            </strong>
+
+            <div>
+
+              <%= order.customerId.phone %>
+
+            </div>
+
+          </div>
+
+          <hr>
+
+          <div id="invoiceItems">
+
+            <p class="text-muted">
+
+              No items selected
+
+            </p>
+
+          </div>
+
+          <hr>
+
+          <div class="mb-3">
+
+            <label class="form-label">
+
+              Coupon Code
+
+            </label>
+
+            <input type="text" class="form-control" id="couponCode">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label">
+
+              Delivery Charge
+
+            </label>
+
+            <input type="number" value="0" class="form-control" id="deliveryCharge">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label">
+
+              Express Charge
+
+            </label>
+
+            <input type="number" value="0" class="form-control" id="expressCharge">
+
+          </div>
+
+          <hr>
+
+          <div class="summary-row">
+
+            <span>Subtotal</span>
+
+            <strong id="subtotal">
+
+              ₹0
+
+            </strong>
+
+          </div>
+
+          <div class="summary-row">
+
+            <span>GST</span>
+
+            <strong id="gst">
+
+              ₹0
+
+            </strong>
+
+          </div>
+
+          <div class="summary-row total">
+
+            <span>Total</span>
+
+            <strong id="total">
+
+              ₹0
+
+            </strong>
+
+          </div>
+
+          <form id="invoiceForm" action="/invoices/generate" method="POST">
+
+            <input type="hidden" name="orderId" value="<%= order._id %>">
+
+            <input type="hidden" name="customerId" value="<%= order.customerId._id %>">
+
+            <input type="hidden" name="items" id="invoicePayload">
+
+            <button class="btn btn-success w-100 mt-4">
+
+              Generate Invoice
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- Custom Cloth Modal -->
+
+<div class="modal fade" id="customClothModal" tabindex="-1">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          Add Custom Cloth
+        </h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+      <div class="modal-body">
+
+        <div class="mb-3">
+
+          <label>Cloth Name</label>
+
+          <input type="text" id="customName" class="form-control">
+
+        </div>
+
+        <div class="mb-3">
+
+          <label>Category</label>
+
+          <select id="customCategory" class="form-select">
+
+            <option>Dry Cleaning</option>
+            <option>Steam Press</option>
+            <option>Wash & Fold</option>
+            <option>Wash & Iron</option>
+
+          </select>
+
+        </div>
+
+        <div class="row">
+
+          <div class="col">
+
+            <label>Qty</label>
+
+            <input type="number" id="customQty" value="1" class="form-control">
+
+          </div>
+
+          <div class="col">
+
+            <label>Amount</label>
+
+            <input type="number" id="customAmount" class="form-control">
+
+          </div>
+
+        </div>
+
+        <div class="mt-3">
+
+          <label>Notes</label>
+
+          <textarea id="customNotes" class="form-control"></textarea>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+          Cancel
+
+        </button>
+
+        <button type="button" class="btn btn-success" id="saveCustomItem">
+
+          Add
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<script>
+  window.pricingData = <%- JSON.stringify(pricingData || {}) %>;
+</script>

@@ -35,7 +35,7 @@ class InvoiceController {
 
           order,
 
-          items: items["Dry Cleaning"],
+          pricingData: items,
 
           errors: []
         }

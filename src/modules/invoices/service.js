@@ -16,15 +16,15 @@ const PriceItem =
 const pricingItems =
   require('../../data/pricing-items.json');
 
-  const puppeteer =
+const puppeteer =
   require("puppeteer");
 
 const path =
   require("path");
 
 const fs =
-  require("fs");  
-  
+  require("fs");
+
 const ejs =
   require("ejs");
 class InvoiceService {
@@ -36,8 +36,8 @@ class InvoiceService {
   }
 
   async getPriceItems(
-    // serviceId,
-    // category
+    serviceId,
+    category
   ) {
 
     // const query = {
@@ -54,7 +54,7 @@ class InvoiceService {
     //     category;
     // }
 
-    
+
     // return PriceItem.find(query);
     return pricingItems;
   }
@@ -169,53 +169,57 @@ class InvoiceService {
       await this.calculateInvoice(
         payload
       );
+    const customItems =
+      payload.items.filter(
+        item => item.custom === true
+      );
 
     const invoiceNumber =
       `INV${Date.now()}`;
-      return Invoice.create({
-        customerId: payload.customerId,
-        invoiceNumber,
-      
-        orderId: payload.orderId,
-      
-        items: payload.items,
-      
-        couponCode: payload.couponCode,
-      
-        deliveryCharge:
-          payload.deliveryCharge || 0,
-      
-        expressCharge:
-          payload.expressCharge || 0,
-      
-        deliveryDate:
-          payload.deliveryDate,
-      
-        deliveryTime:
-          payload.deliveryTime,
-      
-        challanNumber:
-          payload.challanNumber,
-      
-        customerGST:
-          payload.customerGST,
-      
-        comments:
-          payload.comments,
-      
-        generatedAt:
-          new Date(),
-      
-        isFinalized: true,
-      
-        sgstAmount:
-          totals.gstAmount / 2,
-      
-        cgstAmount:
-          totals.gstAmount / 2,
-      
-        ...totals
-      });
+    return Invoice.create({
+      customerId: payload.customerId,
+      invoiceNumber,
+
+      orderId: payload.orderId,
+
+      items: payload.items,
+      customItems,
+      couponCode: payload.couponCode,
+
+      deliveryCharge:
+        payload.deliveryCharge || 0,
+
+      expressCharge:
+        payload.expressCharge || 0,
+
+      deliveryDate:
+        payload.deliveryDate,
+
+      deliveryTime:
+        payload.deliveryTime,
+
+      challanNumber:
+        payload.challanNumber,
+
+      customerGST:
+        payload.customerGST,
+
+      comments:
+        payload.comments,
+
+      generatedAt:
+        new Date(),
+
+      isFinalized: true,
+
+      sgstAmount:
+        totals.gstAmount / 2,
+
+      cgstAmount:
+        totals.gstAmount / 2,
+
+      ...totals
+    });
   }
 
   async getInvoice(id) {
@@ -233,17 +237,17 @@ class InvoiceService {
   async generatePdf(invoice) {
 
     const browser =
-    await puppeteer.launch({
-      headless: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox"
-      ]
-    });
-  
+      await puppeteer.launch({
+        headless: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox"
+        ]
+      });
+
     const page =
       await browser.newPage();
-  
+
     const html =
       await ejs.renderFile(
         path.join(
@@ -252,7 +256,7 @@ class InvoiceService {
         ),
         { invoice }
       );
-  
+
     await page.setContent(
       html,
       {
@@ -260,43 +264,43 @@ class InvoiceService {
           "networkidle0"
       }
     );
-  
+
     const invoiceDir =
-  path.join(
-    process.cwd(),
-    "public",
-    "invoices"
-  );
+      path.join(
+        process.cwd(),
+        "public",
+        "invoices"
+      );
 
-if (
-  !fs.existsSync(
-    invoiceDir
-  )
-) {
+    if (
+      !fs.existsSync(
+        invoiceDir
+      )
+    ) {
 
-  fs.mkdirSync(
-    invoiceDir,
-    {
-      recursive: true
+      fs.mkdirSync(
+        invoiceDir,
+        {
+          recursive: true
+        }
+      );
+
     }
-  );
 
-}
+    const pdfPath =
+      path.join(
+        invoiceDir,
+        `${invoice.invoiceNumber}.pdf`
+      );
 
-const pdfPath =
-  path.join(
-    invoiceDir,
-    `${invoice.invoiceNumber}.pdf`
-  );
-  
     await page.pdf({
       path: pdfPath,
       format: "A4",
       printBackground: true
     });
-  
+
     await browser.close();
-  
+
     return pdfPath;
   }
 }
