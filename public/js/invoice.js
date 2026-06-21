@@ -7,132 +7,106 @@ let currentCategory =
 
 function updateInvoice() {
 
-    const qtyInputs =
-        document.querySelectorAll('.qty-input');
-
     let subtotal = 0;
 
     const selectedItems = [...customItems];
 
-    qtyInputs.forEach(input => {
+    Object.keys(selectedQuantities).forEach(itemName => {
 
-        const qty =
-            Number(input.value);
+        const qty = Number(
+            selectedQuantities[itemName]
+        );
 
-        const rate =
-            Number(
-                input.dataset.price
+        if (qty <= 0) return;
+
+        let rate = 0;
+
+        Object.values(window.pricingData).forEach(category => {
+
+            const item = category.find(
+                x => x.itemName === itemName
             );
 
-        if (qty > 0) {
+            if (item) {
+                rate = Number(item.price);
+            }
 
-            const amount =
-                qty * rate;
+        });
 
-            subtotal += amount;
+        const amount = qty * rate;
 
-            selectedItems.push({
+        subtotal += amount;
 
-                itemName:
-                    input.dataset.name,
+        selectedItems.push({
+            itemName,
+            quantity: qty,
+            rate,
+            amount
+        });
 
-                quantity:
-                    qty,
-
-                rate:
-                    rate,
-
-                amount:
-                    amount
-
-            });
-        }
     });
 
     customItems.forEach(item => {
-
-        subtotal +=
-            Number(item.amount || 0);
-
+        subtotal += Number(item.amount || 0);
     });
 
-    const gst =
-        subtotal * 0.18;
+    const gst = subtotal * 0.18;
+    const total = subtotal + gst;
 
-    const total =
-        subtotal + gst;
-
-    document.getElementById(
-        'subtotal'
-    ).innerText =
+    document.getElementById('subtotal').innerText =
         `₹${subtotal.toFixed(2)}`;
 
-    document.getElementById(
-        'gst'
-    ).innerText =
+    document.getElementById('gst').innerText =
         `₹${gst.toFixed(2)}`;
 
-    document.getElementById(
-        'total'
-    ).innerText =
+    document.getElementById('total').innerText =
         `₹${total.toFixed(2)}`;
 
-    document.getElementById(
-        'invoicePayload'
-    ).value =
-        JSON.stringify(
-            selectedItems
-        );
+    document.getElementById('invoicePayload').value =
+        JSON.stringify(selectedItems);
 
     const container =
-        document.getElementById(
-            'invoiceItems'
-        );
+        document.getElementById('invoiceItems');
 
-    if (
-        selectedItems.length === 0
-    ) {
+    if (!selectedItems.length) {
 
         container.innerHTML =
-            `
-            <p class="text-muted">
-                No items selected
-            </p>
-            `;
+            '<p class="text-muted">No items selected</p>';
 
         return;
     }
 
     container.innerHTML =
-        selectedItems
-            .map(item => `
-                <div class="d-flex justify-content-between mb-2">
-
-                    <span>
-
-                        ${item.itemName}
-                        x
-                        ${item.quantity}
-
-                        ${item.custom
-                    ? '<span class="badge bg-success ms-2">Custom</span>'
-                    : ''
-                }
-
-                    </span>
-
+        selectedItems.map(item => `
+    
+                <div class="d-flex justify-content-between border-bottom py-2">
+    
+                    <div>
+    
+                        <strong>${item.itemName}</strong>
+    
+                        <br>
+    
+                        <small>
+                            Qty: ${item.quantity}
+                            × ₹${item.rate}
+                        </small>
+    
+                    </div>
+    
                     <strong>
                         ₹${item.amount}
                     </strong>
-
+    
                 </div>
-            `)
-            .join('');
+    
+            `).join('');
 }
 
 function renderCategory(category) {
 
     currentCategory = category;
+    console.log('current cat ', currentCategory);
 
     const items =
         window.pricingData[category];
@@ -215,8 +189,6 @@ function attachQtyEvents() {
                 selectedQuantities[
                     input.dataset.name
                 ] = qty;
-                // input.value =
-                //     Number(input.value) + 1;
 
                 updateInvoice();
 

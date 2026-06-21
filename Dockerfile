@@ -1,21 +1,20 @@
-FROM node:22-alpine
+# Use the official Node.js Alpine image for a small footprint
+FROM node:20-alpine
 
-WORKDIR /app
+# Set the working directory inside the container
+WORKDIR /usr/src/app
 
+# Copy package management files first to leverage Docker layer caching
 COPY package*.json ./
 
-RUN npm ci --omit=dev
+# Install production dependencies only
+RUN npm ci --only=production
 
+# Copy the rest of your application source code
 COPY . .
 
-ENV NODE_ENV=production
-
+# Expose the port your Node.js app runs on (e.g., 3000)
 EXPOSE 3000
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-RUN chown -R appuser:appgroup /app
-
-USER appuser
-
+# Start the application
 CMD ["npm", "start"]

@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
 
-  laundry-app:
+  app:
 
     build: .
 
@@ -13,5 +13,7 @@ services:
     ports:
       - "3000:3000"
 
-    env_file:
-      - .env
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://172.17.0.1:27017/laundry
+      SESSION_SECRET: laundry-secret
