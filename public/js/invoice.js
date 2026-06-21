@@ -50,8 +50,18 @@ function updateInvoice() {
         subtotal += Number(item.amount || 0);
     });
 
-    const gst = subtotal * 0.18;
-    const total = subtotal + gst;
+    const applyGST =
+        document.getElementById(
+            'applyGST'
+        )?.checked;
+
+    const gst =
+        applyGST
+            ? subtotal * 0.18
+            : 0;
+
+    const total =
+        subtotal + gst;
 
     document.getElementById('subtotal').innerText =
         `₹${subtotal.toFixed(2)}`;
@@ -64,7 +74,19 @@ function updateInvoice() {
 
     document.getElementById('invoicePayload').value =
         JSON.stringify(selectedItems);
-
+        const gstHidden =
+        document.getElementById(
+            'applyGSTValue'
+        );
+    
+    if (gstHidden) {
+    
+        gstHidden.value =
+            applyGST
+                ? 'true'
+                : 'false';
+    
+    }    
     const container =
         document.getElementById('invoiceItems');
 
@@ -249,6 +271,19 @@ document.addEventListener(
     () => {
 
         let subtotal = 0;
+        const gstCheckbox =
+            document.getElementById(
+                'applyGST'
+            );
+
+        if (gstCheckbox) {
+
+            gstCheckbox.addEventListener(
+                'change',
+                updateInvoice
+            );
+
+        }
 
         const selectedItems = [...customItems];
 

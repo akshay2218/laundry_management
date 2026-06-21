@@ -262,8 +262,8 @@
 
     <!-- TOTALS -->
 
-    <% const gstRate=18; const gstAmount=(subTotal * gstRate) / 100; const cgst=gstAmount / 2; const sgst=gstAmount / 2;
-        const grandTotal=subTotal + gstAmount; %>
+    <% const gstAmount=invoice.applyGST ? invoice.gstAmount : 0; const cgst=gstAmount / 2; const sgst=gstAmount / 2;
+        const grandTotal=invoice.finalAmount; %>
 
         <table class="summary">
 
@@ -279,130 +279,119 @@
 
             </tr>
 
-            <tr>
+            <% if(invoice.applyGST){ %>
 
-                <td>
-                    CGST (9%)
-                </td>
+                <tr>
+                    <td>CGST (9%)</td>
+                    <td class="text-right">
+                        ₹<%= cgst.toFixed(2) %>
+                    </td>
+                </tr>
 
-                <td class="text-right">
-                    ₹<%= cgst.toFixed(2) %>
-                </td>
+                <tr>
+                    <td>SGST (9%)</td>
+                    <td class="text-right">
+                        ₹<%= sgst.toFixed(2) %>
+                    </td>
+                </tr>
 
-            </tr>
+                <% } %>
 
-            <tr>
+                    <tr class="grand-total">
 
-                <td>
-                    SGST (9%)
-                </td>
+                        <td>
+                            Grand Total
+                        </td>
 
-                <td class="text-right">
-                    ₹<%= sgst.toFixed(2) %>
-                </td>
+                        <td class="text-right">
+                            ₹<%= grandTotal.toFixed(2) %>
+                        </td>
 
-            </tr>
-
-            <tr class="grand-total">
-
-                <td>
-                    Grand Total
-                </td>
-
-                <td class="text-right">
-                    ₹<%= grandTotal.toFixed(2) %>
-                </td>
-
-            </tr>
+                    </tr>
 
         </table>
-        <% if(
-    invoice.customItems &&
-    invoice.customItems.length > 0
-){ %>
+        <% if( invoice.customItems && invoice.customItems.length> 0
+            ){ %>
 
-<h4 style="margin-top:20px;">
-    Custom Cloth Items
-</h4>
-
-<table
-border="1"
-width="100%"
-cellpadding="5">
-
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Qty</th>
-            <th>Amount</th>
-            <th>Notes</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        <% invoice.customItems.forEach(item => { %>
-
-        <tr>
-
-            <td>
-                <%= item.itemName %>
-            </td>
-
-            <td>
-                <%= item.quantity %>
-            </td>
-
-            <td>
-                ₹<%= item.price %>
-            </td>
-
-            <td>
-                <%= item.notes || '' %>
-            </td>
-
-        </tr>
-
-        <% }) %>
-
-    </tbody>
-
-</table>
-
-<% } %>
-        <!-- FOOTER -->
-
-        <div class="footer">
-
-            <h4>
-                Terms & Conditions
+            <h4 style="margin-top:20px;">
+                Custom Cloth Items
             </h4>
 
-            <ul>
+            <table border="1" width="100%" cellpadding="5">
 
-                <li>
-                    Goods once delivered will not be taken back.
-                </li>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Qty</th>
+                        <th>Amount</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
 
-                <li>
-                    Any complaint should be reported within 24 hours.
-                </li>
+                <tbody>
 
-                <li>
-                    UClean is not responsible for colour bleed or fabric damage caused by manufacturing defects.
-                </li>
+                    <% invoice.customItems.forEach(item=> { %>
 
-                <li>
-                    Subject to local jurisdiction.
-                </li>
+                        <tr>
 
-            </ul>
+                            <td>
+                                <%= item.itemName %>
+                            </td>
 
-            <p class="small">
-                This is a system generated invoice and does not require a signature.
-            </p>
+                            <td>
+                                <%= item.quantity %>
+                            </td>
 
-        </div>
+                            <td>
+                                ₹<%= item.price %>
+                            </td>
+
+                            <td>
+                                <%= item.notes || '' %>
+                            </td>
+
+                        </tr>
+
+                        <% }) %>
+
+                </tbody>
+
+            </table>
+
+            <% } %>
+                <!-- FOOTER -->
+
+                <div class="footer">
+
+                    <h4>
+                        Terms & Conditions
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            Goods once delivered will not be taken back.
+                        </li>
+
+                        <li>
+                            Any complaint should be reported within 24 hours.
+                        </li>
+
+                        <li>
+                            UClean is not responsible for colour bleed or fabric damage caused by manufacturing defects.
+                        </li>
+
+                        <li>
+                            Subject to local jurisdiction.
+                        </li>
+
+                    </ul>
+
+                    <p class="small">
+                        This is a system generated invoice and does not require a signature.
+                    </p>
+
+                </div>
 
 </body>
 

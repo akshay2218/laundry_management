@@ -89,7 +89,16 @@
         <div>
 
           GST:
-          ₹<%= invoice.gstAmount %>
+
+<% if(invoice.applyGST){ %>
+
+₹<%= invoice.gstAmount %>
+
+<% } else { %>
+
+Not Applicable
+
+<% } %>
 
         </div>
 

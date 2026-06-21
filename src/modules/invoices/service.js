@@ -129,11 +129,17 @@ class InvoiceService {
     const taxableAmount =
       subtotal - discount;
 
+    const applyGST =
+      payload.applyGST === 'true';
+
     const gstAmount =
-      (
-        taxableAmount *
-        gstRate
-      ) / 100;
+      applyGST
+        ? subtotal * 0.18
+        : 0;
+    console.log("GST Amount:", gstAmount);
+    console.log("Apply GST:", applyGST);
+    
+        
 
     const finalAmount =
       taxableAmount +
@@ -203,7 +209,7 @@ class InvoiceService {
 
       customerGST:
         payload.customerGST,
-
+      applyGST: payload.applyGST,
       comments:
         payload.comments,
 
