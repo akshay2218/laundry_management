@@ -2,13 +2,14 @@
   id="sidebar"
   class="sidebar">
 
-  <div class="sidebar-logo">
+  <div class="sidebar-logo text-center">
 
-    <h4>
-      Laundry ERP
-    </h4>
+    <img
+        src="/images/uclean-logo.png"
+        alt="UClean"
+        class="img-fluid sidebar-brand-logo">
 
-  </div>
+</div>
 
   <nav>
 
@@ -38,12 +39,12 @@
       <% if(user &&
       user.role === 'ADMIN'){ %>
 
-      <li>
+      <!-- <li>
         <a href="/pricing">
           <i class="bi bi-currency-rupee"></i>
           Pricing
         </a>
-      </li>
+      </li> -->
 
       <li>
         <a href="/coupons">
