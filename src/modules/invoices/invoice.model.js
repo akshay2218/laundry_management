@@ -69,7 +69,10 @@ const itemSchema =
   
     challanNumber: String,
     customerGST: String,
-  
+    applyGST: {
+      type: Boolean,
+      default: true
+    },
     comments: String,
   
     generatedAt: Date

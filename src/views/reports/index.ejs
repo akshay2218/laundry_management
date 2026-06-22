@@ -8,9 +8,9 @@
           Reports Dashboard
         </h3>
   
-        <p class="text-muted mb-0">
+        <!-- <p class="text-muted mb-0">
           Revenue and GST reporting
-        </p>
+        </p> -->
   
       </div>
   
@@ -72,9 +72,7 @@ class="form-control datepicker"
           </div>
   
           <h3>
-  
-            ₹<%= stats.revenue || 0 %>
-  
+            ₹<%= Number(stats.revenue || 0).toFixed(2) %>
           </h3>
   
         </div>
@@ -91,7 +89,7 @@ class="form-control datepicker"
   
           <h3>
   
-            ₹<%= stats.gst || 0 %>
+            ₹<%= Number(stats.gst || 0).toFixed(2) %>
   
           </h3>
   

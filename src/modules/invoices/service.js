@@ -209,7 +209,7 @@ class InvoiceService {
 
       customerGST:
         payload.customerGST,
-      applyGST: payload.applyGST,
+      applyGST: payload.applyGST === 'true',
       comments:
         payload.comments,
 
