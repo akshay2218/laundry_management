@@ -2,33 +2,33 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
   
-      const rows =
-        document.querySelectorAll(
-          "tbody tr"
-        );
+      // const rows =
+      //   document.querySelectorAll(
+      //     "tbody tr"
+      //   );
   
-      rows.forEach(row => {
+      // rows.forEach(row => {
   
-        row.addEventListener(
-          "click",
-          event => {
+      //   row.addEventListener(
+      //     "click",
+      //     event => {
   
-            if (
-              event.target.tagName !==
-              "A"
-            ) {
+      //       if (
+      //         event.target.tagName !==
+      //         "A"
+      //       ) {
   
-              const link =
-                row.querySelector("a");
+      //         const link =
+      //           row.querySelector("a");
   
-              if (link) {
+      //         if (link) {
   
-                window.location =
-                  link.href;
-              }
-            }
-          }
-        );
-      });
+      //           window.location =
+      //             link.href;
+      //         }
+      //       }
+      //     }
+      //   );
+      // });
     }
   );

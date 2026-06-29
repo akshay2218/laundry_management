@@ -20,6 +20,7 @@ class OrderService {
       .populate("customerId")
       .populate("addressId")
       .populate("assignedDeliveryPersonId")
+      .populate("invoiceId")
       .sort({
         createdAt: -1
       });

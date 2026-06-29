@@ -142,7 +142,18 @@
     align-items:center;
     ">
 
-        <img src="/images/uc-white.png" alt="Logo" style="height:60px;">
+        <!-- <img src="/images/uc-white.png" alt="Logo" style="height:60px;"> -->
+        <div>
+
+            <div class="logo">
+                UClean
+            </div>
+
+            <div>
+                We ❤️ Laundry
+            </div>
+
+        </div>
 
         <div style="
         color:white;
@@ -280,6 +291,9 @@
 
                                 <tr>
                                     <td>
+                                        <%= index + 1 %>
+                                    </td>
+                                    <td>
                                         <%= item.serviceName %>
                                     </td>
                                     <td>
@@ -364,93 +378,43 @@
 
         </table>
 
-        <% if( invoice.customItems && invoice.customItems.length> 0
-            ){ %>
+        <div class="disclaimer">
 
-            <h4 style="margin-top:20px;">
-                Custom Cloth Items
-            </h4>
+            Disclaimer:
+            I hereby acknowledge that I accept the service
 
-            <table border="1" width="100%" cellpadding="5">
-
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Qty</th>
-                        <th>Amount</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <% invoice.customItems.forEach(item=> { %>
-
-                        <tr>
-
-                            <td>
-                                <%= item.itemName %>
-                            </td>
-
-                            <td>
-                                <%= item.quantity %>
-                            </td>
-
-                            <td>
-                                ₹<%= item.price %>
-                            </td>
-
-                            <td>
-                                <%= item.notes || '' %>
-                            </td>
-
-                        </tr>
-
-                        <% }) %>
-
-                </tbody>
-
-            </table>
-
-            <% } %>
-
-                <div class="disclaimer">
-
-                    Disclaimer:
-                    I hereby acknowledge that I accept the service
-
-                    <span style="
+            <span style="
                 color:#8cc63f;
                 font-weight:bold;
                 ">
-                        terms & conditions*
-                    </span>
+                terms & conditions*
+            </span>
 
-                </div>
+        </div>
 
-                <div class="page-number">
-                    Page: 1 of 2
-                </div>
+        <div class="page-number">
+            Page: 1 of 2
+        </div>
 
-                <div class="contact-footer">
+        <div class="contact-footer">
 
-                    Contact Support:
+            Contact Support:
 
-                    &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
 
-                    9999759911
+            9999759911
 
-                    &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
 
-                    support@uclean.in
+            support@uclean.in
 
-                </div>
+        </div>
 
 
-                <!-- Page 2  -->
+        <!-- Page 2  -->
 
-                <div style="page-break-before: always;"></div>
-                <div style="
+        <div style="page-break-before: always;"></div>
+        <div style="
                 background:#00573f;
                 padding:20px;
                 margin:-20px -20px 30px -20px;
@@ -459,97 +423,107 @@
                 align-items:center;
                 ">
 
-                    <img src="/images/uc-white.png" alt="logo" style="height:60px;">
+            <!-- <img src="/images/uc-white.png" alt="logo" style="height:60px;"> -->
+            <div>
+                <div class="logo">
+                    UClean
+                </div>
 
-                    <div style="
+                <div>
+                    We ❤️ Laundry
+                </div>
+            </div>
+
+
+            <div style="
                     color:white;
                     font-size:20px;
                     font-weight:bold;
                     ">
-                        www.ucleanlaundry.com
-                    </div>
+                www.ucleanlaundry.com
+            </div>
 
-                </div>
-                <h2>Terms and Conditions</h2>
+        </div>
+        <h2>Terms and Conditions</h2>
 
-                <ol>
+        <ol>
 
-                    <li>The original receipt must be presented at the time of delivery of processed articles.</li>
+            <li>The original receipt must be presented at the time of delivery of processed articles.</li>
 
-                    <li>If the original receipt or invoice is not presented at the time of delivery, the articles will
-                        be handed over only after proper verification.</li>
+            <li>If the original receipt or invoice is not presented at the time of delivery, the articles will
+                be handed over only after proper verification.</li>
 
-                    <li>Any complaint regarding processed articles must be reported within 48 hours.</li>
+            <li>Any complaint regarding processed articles must be reported within 48 hours.</li>
 
-                    <li>Express delivery services may attract additional charges.</li>
+            <li>Express delivery services may attract additional charges.</li>
 
-                    <li>Additional charges may apply for special stain removal treatment.</li>
+            <li>Additional charges may apply for special stain removal treatment.</li>
 
-                    <li>UClean is not responsible for colour bleeding or shrinkage caused due to garment quality.</li>
+            <li>UClean is not responsible for colour bleeding or shrinkage caused due to garment quality.</li>
 
-                    <li>We are not responsible for damages to embroidery or embellishments.</li>
+            <li>We are not responsible for damages to embroidery or embellishments.</li>
 
-                    <li>Garments with pre-existing defects are accepted at customer's risk.</li>
+            <li>Garments with pre-existing defects are accepted at customer's risk.</li>
 
-                    <li>No fault no claim policy applies.</li>
+            <li>No fault no claim policy applies.</li>
 
-                    <li>Items not collected within 3 weeks are at customer's responsibility.</li>
+            <li>Items not collected within 3 weeks are at customer's responsibility.</li>
 
-                    <li>We are not responsible for ornaments attached to garments.</li>
+            <li>We are not responsible for ornaments attached to garments.</li>
 
-                    <li>Manufacturing defects are not covered.</li>
+            <li>Manufacturing defects are not covered.</li>
 
-                    <li>Discounts cannot be applied after invoice generation.</li>
+            <li>Discounts cannot be applied after invoice generation.</li>
 
-                    <li>Multiple discounts cannot be combined.</li>
+            <li>Multiple discounts cannot be combined.</li>
 
-                    <li>Delivery delays due to unforeseen circumstances are not compensable.</li>
+            <li>Delivery delays due to unforeseen circumstances are not compensable.</li>
 
-                    <li>Valuables left inside garments are customer's responsibility.</li>
+            <li>Valuables left inside garments are customer's responsibility.</li>
 
-                    <li>Loss due to fire, burglary or natural disasters is not covered.</li>
+            <li>Loss due to fire, burglary or natural disasters is not covered.</li>
 
-                    <li>Compensation for damaged garments is limited as per company policy.</li>
+            <li>Compensation for damaged garments is limited as per company policy.</li>
 
-                    <li>Disputes are subject to Delhi jurisdiction.</li>
+            <li>Disputes are subject to Delhi jurisdiction.</li>
 
-                    <li>UClean reserves the right to modify these terms.</li>
+            <li>UClean reserves the right to modify these terms.</li>
 
-                    <li>Using the service implies acceptance of all terms above.</li>
+            <li>Using the service implies acceptance of all terms above.</li>
 
-                </ol>
+        </ol>
 
-                <div class="disclaimer">
+        <div class="disclaimer">
 
-                    Disclaimer:
-                    I hereby acknowledge that I accept the service
+            Disclaimer:
+            I hereby acknowledge that I accept the service
 
-                    <span style="
+            <span style="
                     color:#8cc63f;
                     font-weight:bold;
                     ">
-                        terms & conditions*
-                    </span>
+                terms & conditions*
+            </span>
 
-                </div>
+        </div>
 
-                <div class="page-number">
-                    Page: 2 of 2
-                </div>
+        <div class="page-number">
+            Page: 2 of 2
+        </div>
 
-                <div class="contact-footer">
+        <div class="contact-footer">
 
-                    Contact Support
+            Contact Support
 
-                    &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
 
-                    9999759911
+            9999759911
 
-                    &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
 
-                    support@uclean.in
+            support@uclean.in
 
-                </div>
+        </div>
 </body>
 
 </html>

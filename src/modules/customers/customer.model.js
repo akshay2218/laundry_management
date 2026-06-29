@@ -18,7 +18,10 @@ const customerSchema = new mongoose.Schema(
       type: String,
       default: null
     },
-
+    shortAddress: {
+      type: String,
+      default: null
+    },
     totalOrders: {
       type: Number,
       default: 0

@@ -108,14 +108,14 @@ class OrderController {
           customerId
         );
       await Customer.findByIdAndUpdate(
-          customerId,
-          {
-            $inc: {
-              totalOrders: 1
-            }
+        customerId,
+        {
+          $inc: {
+            totalOrders: 1
           }
-        );
-        
+        }
+      );
+
       const addresses =
         await service.getCustomerAddresses(
           customerId
@@ -187,8 +187,6 @@ class OrderController {
   ) {
 
     try {
-      console.log("user details", req.user);
-      
       await service.updateStatus(
         req.params.id,
 

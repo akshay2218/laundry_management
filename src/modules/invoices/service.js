@@ -138,8 +138,8 @@ class InvoiceService {
         : 0;
     console.log("GST Amount:", gstAmount);
     console.log("Apply GST:", applyGST);
-    
-        
+
+
 
     const finalAmount =
       taxableAmount +
@@ -182,7 +182,10 @@ class InvoiceService {
 
     const invoiceNumber =
       `INV${Date.now()}`;
-    return Invoice.create({
+
+
+
+    const invoiceRes =  await Invoice.create({
       customerId: payload.customerId,
       invoiceNumber,
 
@@ -226,6 +229,21 @@ class InvoiceService {
 
       ...totals
     });
+    
+    const orderRes = await Order.findByIdAndUpdate(
+      payload.orderId,
+      { 
+        invoiceNumber : invoiceNumber,
+        invoiceId : invoiceRes._id
+       },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+    console.log('order updated with invoice number and invoiceId:', orderRes);
+    
+    return invoiceRes
   }
 
   async getInvoice(id) {

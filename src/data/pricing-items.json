@@ -14,7 +14,8 @@
   ],
 
   "Steam Press": [
-    { "itemName": "Steam Iron", "price": 25 }
+    { "itemName": "Steam Iron", "price": 25 },
+    { "itemName": "Steam Press", "price": 15 }
   ],
 
   "Wash & Fold": [

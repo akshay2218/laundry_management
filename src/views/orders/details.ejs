@@ -1,183 +1,196 @@
 <div class="container-fluid">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-  
-      <div>
-  
-        <h3>
-          <%= order.orderNumber %>
-        </h3>
-  
-        <p class="text-muted mb-0">
-  
-          Created on
-  
-          <%= new Date(order.createdAt)
-            .toLocaleDateString() %>
-  
-        </p>
-  
-      </div>
-  
-      <a
-        href="/orders/<%= order._id %>/invoice"
-        class="btn btn-success">
-  
-        Generate Invoice
-  
-      </a>
-  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+      <h3>
+        <%= order.orderNumber %>
+      </h3>
+
+      <p class="text-muted mb-0">
+
+        Created on
+
+        <%= new Date(order.createdAt) .toLocaleDateString() %>
+
+      </p>
+
     </div>
-  
-    <div class="row">
-  
-      <div class="col-lg-4">
-  
-        <div class="card mb-4">
-  
-          <div class="card-body">
-  
-            <h5>
-              Customer
-            </h5>
-  
-            <p class="mb-1">
-  
-              <%= order.customerId?.name %>
-  
-            </p>
-  
-            <p>
-  
-              <%= order.customerId?.phone %>
-  
-            </p>
-  
-          </div>
-  
+
+    <td>
+      <% if (order.invoiceNumber) { %>
+        <a
+          href="/invoices/<%= order.invoiceId %>/download" class="btn btn-success" >
+          <i class="bi bi-download"></i>
+          Download PDF
+        </a>
+      <% } else { %>
+        <a
+          href="/orders/<%= order._id %>/invoice"
+          class="btn btn-success"
+        >
+          <i class="bi bi-file-earmark-plus"></i>
+          Generate Invoice
+        </a>
+      <% } %>
+    </td>
+    <!-- <a href="/orders/<%= order._id %>/invoice" class="btn btn-success"> Generate Invoice </a> -->
+
+  </div>
+
+  <div class="row">
+
+    <div class="col-lg-4">
+
+      <div class="card mb-4">
+
+        <div class="card-body">
+
+          <h5>
+            Customer
+          </h5>
+
+          <p class="mb-1">
+
+            <%= order.customerId?.name %>
+              <%= order.customerId?.shortAddress %>
+
+          </p>
+
+          <p>
+
+            <%= order.customerId?.phone %>
+
+          </p>
+
         </div>
-  
-        <div class="card">
-  
-          <div class="card-body">
-  
-            <h5>
-              Order Info
-            </h5>
-  
-            <div class="summary-item">
-  
-              <span>Status</span>
-  
-              <strong>
-  
-                <%= order.status %>
-  
-              </strong>
-  
-            </div>
-  
-            <div class="summary-item">
-  
-              <span>Pickup Date</span>
-  
-              <strong>
-  
-                <%= new Date(order.pickupDate)
-                  .toLocaleDateString() %>
-  
-              </strong>
-  
-            </div>
-  
-            <div class="summary-item">
-  
-              <span>Pickup Time</span>
-  
-              <strong>
-  
-                <%= order.pickupTime %>
-  
-              </strong>
-  
-            </div>
-  
-          </div>
-  
-        </div>
-  
+
       </div>
-  
-      <div class="col-lg-8">
-  
-        <div class="card mb-4">
-  
-          <div class="card-body">
-  
-            <h5 class="mb-3">
-  
-              Update Status
-  
-            </h5>
-  
-            <form
-              method="POST"
-              action="/orders/<%= order._id %>/status">
-  
-              <div class="row">
-  
-                <div class="col-md-8">
-  
-                  <select
-                    class="form-select"
-                    name="status">
-  
-                    <option value="NEW">
-                      NEW
-                    </option>
-  
-                    <option value="IN_PROCESS">
-                      IN PROCESS
-                    </option>
-  
-                    <option value="READY">
-                      READY
-                    </option>
-  
-                    <option value="ASSIGNED">
-                      ASSIGNED
-                    </option>
-  
-                    <option value="DELIVERED">
-                      DELIVERED
-                    </option>
-  
-                  </select>
-  
-                </div>
-  
-                <div class="col-md-4">
-  
-                  <button
-                    class="btn btn-primary w-100">
-  
-                    Update
-  
-                  </button>
-  
-                </div>
-  
-              </div>
-  
-            </form>
-  
+
+      <div class="card">
+
+        <div class="card-body">
+
+          <h5>
+            Order Info
+          </h5>
+
+          <div class="summary-item">
+
+            <span>Status</span>
+
+            <strong>
+
+              <%= order.status %>
+
+            </strong>
+
           </div>
-  
+
+          <div class="summary-item">
+
+            <span>Pickup Date</span>
+
+            <strong>
+
+              <%= new Date(order.pickupDate) .toLocaleDateString() %>
+
+            </strong>
+
+          </div>
+
+          <div class="summary-item">
+
+            <span>Pickup Time</span>
+
+            <strong>
+
+              <%= order.pickupTime %>
+
+            </strong>
+
+          </div>
+
         </div>
-  
-        <div class="card mb-4">
-  
-          <div class="card-body">
+
+      </div>
+
+    </div>
+
+    <div class="col-lg-8">
+
+      <div class="card mb-4">
+
+        <div class="card-body">
+
+          <h5 class="mb-3">
+
+            Update Status
+
+          </h5>
+
+          <form method="POST" action="/orders/<%= order._id %>/status">
+
+            <div class="row">
+
+              <div class="col-md-8">
+
+                <select class="form-select" name="status">
+
+                  <option value="NEW">
+                    NEW
+                  </option>
+
+                  <option value="IN_PROCESS">
+                    IN PROCESS
+                  </option>
+
+                  <option value="READY">
+                    READY
+                  </option>
+
+                  <option value="ASSIGNED">
+                    ASSIGNED
+                  </option>
+
+                  <option value="DELIVERED">
+                    DELIVERED
+                  </option>
+
+                  <option value="PAYMENT_ PENDING">
+                    PAYMENT PENDING
+                  </option>
+
+                  <option value="PAYMENT_COMPLETED">
+                    PAYMENT DONE
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div class="col-md-4">
+
+                <button class="btn btn-primary w-100">
+
+                  Update
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <div class="card mb-4">
+
+        <!-- <div class="card-body">
   
             <h5 class="mb-3">
   
@@ -231,71 +244,68 @@
   
             </form>
   
-          </div>
-  
-        </div>
-  
-        <div class="card">
-  
-          <div class="card-body">
-  
-            <h5 class="mb-3">
-  
-              Status History
-  
-            </h5>
-  
-            <table
-  id="dataTable"
-  class="table table-hover">
-  
-              <thead>
-  
+          </div> -->
+
+      </div>
+
+      <div class="card">
+
+        <div class="card-body">
+
+          <h5 class="mb-3">
+
+            Status History
+
+          </h5>
+
+          <table id="dataTable" class="table table-hover">
+
+            <thead>
+
               <tr>
-  
+
                 <th>Status</th>
                 <th>Date</th>
-                <th>Changed By</th> 
+                <th>Changed By</th>
               </tr>
-  
-              </thead>
-  
-              <tbody>
-  
-              <% order.statusHistory.forEach(history => { %>
-  
-              <tr>
-  
-                <td>
-  
-                  <%= history.status %>
-  
-                </td>
-  
-                <td>
-  
-                  <%= new Date(history.changedAt)
-                    .toLocaleString() %>
-  
-                </td>
-                <td>
-                  <%= history.changedByName %>
-                </td>
-  
-              </tr>
-  
-              <% }) %>
-  
-              </tbody>
-  
-            </table>
-  
-          </div>
-  
+
+            </thead>
+
+            <tbody>
+
+              <% order.statusHistory.forEach(history=> { %>
+
+                <tr>
+
+                  <td>
+
+                    <%= history.status %>
+
+                  </td>
+
+                  <td>
+
+                    <%= new Date(history.changedAt) .toLocaleString() %>
+
+                  </td>
+                  <td>
+                    <%= history.changedByName %>
+                  </td>
+
+                </tr>
+
+                <% }) %>
+
+            </tbody>
+
+          </table>
+
         </div>
-  
+
       </div>
-  
+
     </div>
-  
+
   </div>
+
+</div>

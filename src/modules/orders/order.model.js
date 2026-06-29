@@ -15,7 +15,7 @@ const statusSchema =
           mongoose.Schema.Types.ObjectId,
         ref: "User"
       },
-      changedByName:{
+      changedByName: {
         type: String,
         ref: "User"
       }
@@ -46,7 +46,17 @@ const orderSchema =
         ref: "Address",
         required: true
       },
-
+      invoiceId: {
+        type:
+          mongoose.Schema.Types.ObjectId,
+        ref: "Invoice",
+        required: false
+      },
+      invoiceNumber: {
+        type: String,
+        ref: 'Invoice',
+        required: false
+      },
       orderSource: {
         type: String,
         enum: [

@@ -84,6 +84,15 @@ class="form-control datepicker"
                 <option value="DELIVERED">
                   Delivered
                 </option>
+
+
+                <option value="PAYMENT_PENDING">
+                  PAYMENT PENDING
+                </option>
+
+                <option value="PAYMENT_COMPLETED">
+                  PAYMENT DONE
+                </option>
   
               </select>
   
@@ -183,6 +192,31 @@ class="form-control datepicker"
         </a>
   
       </li>
+
+      <li class="nav-item">
+  
+        <a
+          class="nav-link <%= query?.status === 'PAYMENT_PENDING' ? 'active' : '' %>"
+          href="/dashboard?status=PAYMENT_PENDING">
+  
+          PAYMENT PENDING
+  
+        </a>
+  
+      </li>
+
+
+      <li class="nav-item">
+  
+        <a
+          class="nav-link <%= query?.status === 'PAYMENT_COMPLETED' ? 'active' : '' %>"
+          href="/dashboard?status=PAYMENT_COMPLETED">
+  
+          PAYMENT COMPLETED
+  
+        </a>
+  
+      </li>
   
     </ul>
   
@@ -202,6 +236,8 @@ class="form-control datepicker"
             <tr>
   
               <th>Order #</th>
+
+              <th>Address</th>
   
               <th>Customer</th>
   
@@ -210,8 +246,8 @@ class="form-control datepicker"
               <th>Pickup Date</th>
   
               <th>Status</th>
-  
-              <th>Delivery</th>
+              <th>Invoice Amount</th>
+              <th>Invoice</th>
   
               <th width="120">
                 Actions
@@ -233,6 +269,10 @@ class="form-control datepicker"
                 </strong>
               </td>
   
+              <td>
+                <%= order.customerId.shortAddress %>
+              </td>
+
               <td>
                 <%= order.customerId?.name %>
               </td>
@@ -258,9 +298,26 @@ class="form-control datepicker"
               </td>
   
               <td>
-  
-                <%= order.assignedDeliveryPersonId?.name || '-' %>
-  
+                <% if (order.invoiceId) { %>
+                  ₹<%= order.invoiceId?.finalAmount %>                  
+                <% } else { %>
+                  <span class="text-muted">Not Available</span>
+                <% } %>
+              </td>
+
+              <td>
+                <% if (order.invoiceId) { %>
+                  <!-- <pre><%= JSON.stringify(order.invoiceId, null, 2) %></pre> -->
+                  <a
+                    href="/invoices/<%= order.invoiceId._id %>/download"
+                    class="btn btn-success"
+                  >
+                    <i class="bi bi-download"></i>
+                    Download PDF
+                  </a>
+                <% } else { %>
+                  <span class="text-muted">Not Available</span>
+                <% } %>
               </td>
   
               <td>

@@ -59,9 +59,15 @@ function updateInvoice() {
         applyGST
             ? subtotal * 0.18
             : 0;
-
+    
+    const appliedDiscount =
+            document.getElementById(
+                'discount'
+            ).value;        
+    const discount = appliedDiscount || 0;        
+            console.log('discount value ', discount);
     const total =
-        subtotal + gst;
+        subtotal + gst - discount;
 
     document.getElementById('subtotal').innerText =
         `₹${subtotal.toFixed(2)}`;
@@ -279,6 +285,20 @@ document.addEventListener(
         if (gstCheckbox) {
 
             gstCheckbox.addEventListener(
+                'change',
+                updateInvoice
+            );
+
+        }
+
+        const discount =
+        document.getElementById(
+            'discount'
+        );
+
+        if (discount) {
+
+            discount.addEventListener(
                 'change',
                 updateInvoice
             );
