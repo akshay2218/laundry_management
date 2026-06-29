@@ -304,10 +304,9 @@ class="form-control datepicker"
                   <span class="text-muted">Not Available</span>
                 <% } %>
               </td>
-
+<!-- 
               <td>
                 <% if (order.invoiceId) { %>
-                  <!-- <pre><%= JSON.stringify(order.invoiceId, null, 2) %></pre> -->
                   <a
                     href="/invoices/<%= order.invoiceId._id %>/download"
                     class="btn btn-success"
@@ -318,8 +317,19 @@ class="form-control datepicker"
                 <% } else { %>
                   <span class="text-muted">Not Available</span>
                 <% } %>
-              </td>
+              </td> -->
   
+              <td>
+                <% if (order.invoiceId) { %>
+                  <a href="/invoices/<%= order.invoiceId._id %>" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-download"></i>
+                    View Invoice
+                  </a>
+                  <% } else { %>
+                    <span class="text-muted">Not Available</span>
+                    <% } %>
+              </td>
+              
               <td>
   
                 <a

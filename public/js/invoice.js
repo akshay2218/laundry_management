@@ -104,31 +104,33 @@ function updateInvoice() {
         return;
     }
 
-    container.innerHTML =
-        selectedItems.map(item => `
+    container.innerHTML = selectedItems.map(item => `
+        <div class="d-flex justify-content-between align-items-start border-bottom py-2">
     
-                <div class="d-flex justify-content-between border-bottom py-2">
+            <div class="flex-grow-1">
+                <strong>${item.itemName}</strong>
+                <br>
+                <small>
+                    Qty: ${item.quantity}
+                    × ₹${item.rate}
+                </small>
+            </div>
     
-                    <div>
+            <div class="d-flex align-items-center gap-2">
+                <strong>₹${item.amount}</strong>
     
-                        <strong>${item.itemName}</strong>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-link text-danger p-0"
+                    onclick="removeInvoiceItem('${item.itemName}')"
+                    title="Remove"
+                >
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
     
-                        <br>
-    
-                        <small>
-                            Qty: ${item.quantity}
-                            × ₹${item.rate}
-                        </small>
-    
-                    </div>
-    
-                    <strong>
-                        ₹${item.amount}
-                    </strong>
-    
-                </div>
-    
-            `).join('');
+        </div>
+    `).join('');
 }
 
 function renderCategory(category) {
@@ -270,6 +272,25 @@ function attachQtyEvents() {
 
         });
 
+}
+
+function removeInvoiceItem(itemName) {
+
+    delete selectedQuantities[itemName];
+
+    customItems = customItems.filter(
+        item => item.itemName !== itemName
+    );
+
+    const input = document.querySelector(
+        `[data-name="${itemName}"]`
+    );
+
+    if (input) {
+        input.value = 0;
+    }
+
+    updateInvoice();
 }
 
 document.addEventListener(

@@ -178,12 +178,22 @@
                           <%= order.status %>
                         </span>
                       </td>
-                      <td>
+                      <!-- Below is for download invoice -->
+                      <!-- <td>
                         <% if (order.invoiceId) { %>
-                          <!-- <pre><%= JSON.stringify(order.invoiceId, null, 2) %></pre> -->
                           <a href="/invoices/<%= order.invoiceId._id %>/download" class="btn btn-success">
                             <i class="bi bi-download"></i>
                             Download PDF
+                          </a>
+                          <% } else { %>
+                            <span class="text-muted">Not Available</span>
+                            <% } %>
+                      </td> -->
+                      <td>
+                        <% if (order.invoiceId) { %>
+                          <a href="/invoices/<%= order.invoiceId._id %>" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-download"></i>
+                            View Invoice
                           </a>
                           <% } else { %>
                             <span class="text-muted">Not Available</span>
