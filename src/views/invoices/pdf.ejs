@@ -1,529 +1,571 @@
+<% /*
+  UClean invoice template - near pixel-level recreation of invoice_sample_2.pdf
+  Designed for Node.js + EJS + Puppeteer.
+  Expected data shape is compatible with the existing EJS template where possible.
+*/ %>
+<%
+  const customer = invoice.orderId?.customerId || {};
+  const order = invoice.orderId || {};
+
+  const invoiceNumber = invoice.invoiceNumber || '-';
+  const challanId = invoice.challanNumber || invoice.challanId || '-';
+  const customerName = customer.name || '-';
+  const customerPhone = customer.phone || '-';
+  const customerAddress = customer.address || invoice.customerAddress || '-';
+
+  const storeCode = invoice.storeCode || 'UC772';
+  const storeName = invoice.storeName || 'UClean Dombivli Thane';
+  const storeGSTIN = invoice.storeGSTIN || '27ABNFR4579F1ZM';
+  const storePhone = invoice.storePhone || '+91 9372550037';
+  const storeAddress = invoice.storeAddress || 'Shop no 17, commercial Building 2, Regenkalyan Thane, kalyan-Dombivli, 421203';
+
+  const orderNumber = order.orderNumber || invoice.orderNumber || '-';
+  const orderDate = invoice.orderDate || order.createdAt || invoice.createdAt || '-';
+  const pickupDateTime = invoice.pickupDate || '-';
+  const deliveryDateTime = invoice.deliveryDateTime || invoice.deliveryDate || '-';
+
+  const items = invoice.items || [];
+  const subTotal = items.reduce((sum, item) => sum + ((Number(item.quantity) || 0) * (Number(item.rate) || 0)), 0);
+  const addonTotal = invoice.addonAmount || 0;
+  const expressAmount = invoice.expressCharge || 0;
+  const discount = invoice.discount || 0;
+  const gstAmount = invoice.applyGST ? Number(invoice.gstAmount || 0) : 0;
+  const cgst = gstAmount / 2;
+  const sgst = gstAmount / 2;
+  const grandTotal = Number(invoice.finalAmount ?? (subTotal + addonTotal + expressAmount - discount + gstAmount));
+
+  const fmt = (value, decimals = 2) => Number(value || 0).toFixed(decimals);
+  const fmtDateTime = (value) => {
+    if (!value || value === '-') return '-';
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return value;
+  };
+
+  const customerAddressLines = String(customerAddress).split(/\r?\n/);
+  const storeAddressLines = String(storeAddress).split(/\r?\n/);
+
+  const terms = [
+    'The original receipt must be presented at the time of delivery of processed articles.',
+    'If the original receipt or invoice is not presented at the time of delivery, the articles will be handed over only to the owner after proper verification of identity.',
+    'If the original receipt or invoice is not presented at the time of delivery, we shall not be held responsible for any loss or misplacement of articles.',
+    'Customers are requested to examine garments at the time of delivery. Any damage, loss, or quality issue must be reported within 48 hours of delivery. Complaints received after 48 hours will not be entertained.',
+    'Express or urgent delivery services will be charged 50% extra over the regular tariff. Charges for such services may also vary on a case-to-case basis and will be communicated at the store.',
+    'Additional charges may apply for special stain removal or best-effort treatments for difficult stains or marks.',
+    'We are not responsible for colour fastness, colour bleeding, colour fading, shrinkage, or any damage to embellishments, embroidery, or decorative elements on garments that may occur during the normal course of processing.',
+    'We are not responsible for stains such as ink marks, sticker residues, or damages to embellishments, embroidery, or delicate/fine garments during processing.',
+    'This is a ‘Wear & Tear’ Policy. Garments with pre-existing stains, marks, or defects are accepted at the customer’s risk. No claims or liability shall be accepted for any resulting damage.',
+    'No Fault No Claim policy. If articles are accepted at customer\'s risk, we shall not be held responsible for damage to articles that occur during processing of any cleaning or any discoloration of clothes.',
+    'We do not accept liability for any items not collected within 3 (three) weeks from the scheduled delivery date.',
+    'We shall not be responsible for any ornaments, jewellery, or detachable fittings on garments that may get damaged during processing.',
+    'We shall not be responsible for damages such as cuts, holes, stretches, or stains that become apparent during washing due to defective manufacturing, prior damage, wear & tear, or environmental exposure.',
+    'No discount will be applicable once the bill has been generated or the garments have been processed.',
+    'Two or more discounts/offers cannot be combined in a single bill.',
+    'We will make every effort to ensure timely pickup and delivery. However, delays due to unforeseen circumstances or force majeure events may occur, and in such cases, no compensation, refund, or reduction in charges shall be applicable.'
+  ];
+%>
+
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="UTF-8">
-    <title>
-        <%= invoice.invoiceNumber %>
-    </title>
+<meta charset="UTF-8">
+<title><%= invoiceNumber %></title>
+<style>
+  @page { size: A4; margin: 0; }
 
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            color: #333;
-            padding: 20px;
-        }
+  * { box-sizing: border-box; }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #198754;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 210mm;
+    background: #fff;
+    color: #4f4f4f;
+    font-family: Helvetica, Arial, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            color: #198754;
-        }
+  body { font-size: 10.5pt; }
 
-        .company {
-            text-align: right;
-        }
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    overflow: hidden;
+    background: #fff;
+    padding: 12.3mm 10.2mm 17mm 10.2mm;
+    page-break-after: always;
+  }
 
-        .company h2 {
-            margin: 0;
-            color: #198754;
-        }
+  .page:last-child { page-break-after: auto; }
 
-        .section {
-            margin-bottom: 20px;
-        }
+  .browser-top {
+    height: 5mm;
+    font-size: 7.7pt;
+    line-height: 1;
+    color: #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 0.1mm;
+  }
 
-        .row {
-            width: 100%;
-            margin-bottom: 15px;
-        }
+  .browser-top .suite {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
-        .col {
-            display: inline-block;
-            vertical-align: top;
-            width: 48%;
-        }
+  .brand-row {
+    height: 27mm;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-top: 2.5mm;
+  }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+  .brand-logo {
+    width: 45mm;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
 
-        table th {
-            background: #198754;
-            color: #fff;
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
+  .website {
+    margin-top: 7mm;
+    color: #6fbe44;
+    font-size: 10.8pt;
+    font-weight: 400;
+  }
 
-        table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
+  .invoice-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 4.1mm;
+    margin-bottom: 9.7mm;
+    font-size: 11.5pt;
+  }
 
-        .text-right {
-            text-align: right;
-        }
+  .invoice-meta .label,
+  .invoice-meta .challan-label {
+    color: #004d3c;
+    font-weight: 700;
+  }
 
-        .summary {
-            width: 350px;
-            margin-left: auto;
-            margin-top: 20px;
-        }
+  .invoice-meta .value,
+  .invoice-meta .challan-value {
+    color: #005342;
+    font-weight: 400;
+  }
 
-        .summary td {
-            padding: 8px;
-        }
+  .invoice-meta .tax {
+    font-size: 11.8pt;
+  }
 
-        .grand-total {
-            background: #198754;
-            color: white;
-            font-weight: bold;
-        }
+  .invoice-meta .challan {
+    font-size: 11.2pt;
+  }
 
-        .footer {
-            margin-top: 40px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-        }
+  .section-heading {
+    margin: 0;
+    color: #4d4d4d;
+    font-size: 12.6pt;
+    line-height: 1.15;
+    font-weight: 700;
+  }
 
-        .small {
-            font-size: 10px;
-            color: #666;
-        }
+  .customer-store {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 14mm;
+    margin-left: 5.8mm;
+  }
 
-        .section-title {
-            background: #ececec;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+  .details-block { min-width: 0; }
 
-        .contact-footer {
-            background: #00573f;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
+  .details-block .section-heading { margin-bottom: 8.2mm; }
 
-        .disclaimer {
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-            margin-top: 20px;
-            font-size: 12px;
-        }
-    </style>
+  .detail-row {
+    display: grid;
+    grid-template-columns: 25mm 1fr;
+    min-height: 4.25mm;
+    line-height: 1.3;
+    font-size: 10.5pt;
+  }
 
+  .detail-row .key {
+    font-weight: 700;
+    color: #575757;
+  }
+
+  .detail-row .value {
+    font-weight: 400;
+    color: #4f4f4f;
+    overflow-wrap: anywhere;
+  }
+
+  .address-line { display: block; }
+
+  .order-section {
+    margin-top: 14.8mm;
+    margin-left: 5.8mm;
+    margin-right: 5.8mm;
+  }
+
+  .order-section .section-heading { margin-bottom: 8.7mm; }
+
+  .order-meta {
+    display: grid;
+    grid-template-columns: 1.18fr 1fr 1fr;
+    column-gap: 7mm;
+    align-items: start;
+    margin-bottom: 10.3mm;
+  }
+
+  .order-meta-block { min-width: 0; }
+
+  .order-meta-title {
+    font-size: 10.3pt;
+    line-height: 1.18;
+    font-weight: 700;
+    color: #5b5b5b;
+    white-space: nowrap;
+  }
+
+  .order-meta-title .store-tag {
+    color: #356d28;
+  }
+
+  .order-meta-value {
+    margin-top: 1.3mm;
+    font-size: 10.2pt;
+    line-height: 1.2;
+    color: #5b5b5b;
+    white-space: nowrap;
+  }
+
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 10pt;
+  }
+
+  .items-table col.c1 { width: 7.1%; }
+  .items-table col.c2 { width: 24.0%; }
+  .items-table col.c3 { width: 11.5%; }
+  .items-table col.c4 { width: 8.4%; }
+  .items-table col.c5 { width: 8.0%; }
+  .items-table col.c6 { width: 6.7%; }
+  .items-table col.c7 { width: 9.2%; }
+  .items-table col.c8 { width: 10.8%; }
+  .items-table col.c9 { width: 14.3%; }
+
+  .items-table th {
+    height: 8.6mm;
+    padding: 0 1.3mm 2.1mm;
+    text-align: left;
+    vertical-align: bottom;
+    color: #4c4c4c;
+    font-weight: 700;
+    border-bottom: 0.3mm solid #d8d8d8;
+    white-space: nowrap;
+  }
+
+  .items-table td {
+    height: 8.7mm;
+    padding: 1.7mm 1.2mm;
+    color: #555;
+    vertical-align: middle;
+    border-right: 0.25mm solid #d8d8d8;
+    border-bottom: 0.25mm solid #d8d8d8;
+    overflow-wrap: anywhere;
+  }
+
+  .items-table td:last-child { border-right: 0; }
+  .items-table th:last-child { text-align: right; padding-right: 1.5mm; }
+  .items-table td:nth-child(5),
+  .items-table td:nth-child(6),
+  .items-table td:nth-child(7),
+  .items-table td:nth-child(8),
+  .items-table td:nth-child(9) { text-align: right; }
+  .items-table td:nth-child(1) { text-align: left; }
+  .items-table td:nth-child(9) { font-weight: 700; }
+
+  .summary {
+    width: 81mm;
+    margin-left: auto;
+    margin-top: 5.6mm;
+    margin-right: 5.8mm;
+    font-size: 10.8pt;
+  }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: 1fr 27mm;
+    min-height: 5.9mm;
+    align-items: center;
+  }
+
+  .summary-row .label { font-weight: 700; color: #575757; }
+  .summary-row .amount { text-align: right; color: #555; }
+
+  .summary-total {
+    margin-top: 2.1mm;
+    padding: 2.5mm 0 2.5mm;
+    border-top: 0.35mm solid #8b8b8b;
+    border-bottom: 0.35mm solid #8b8b8b;
+    font-size: 11.5pt;
+  }
+
+  .summary-total .label { font-weight: 700; }
+  .summary-total .amount { font-weight: 400; }
+
+  .disclaimer {
+    position: absolute;
+    left: 10.2mm;
+    right: 10.2mm;
+    bottom: 38.8mm;
+    border-top: 0.25mm solid #e1e1e1;
+    padding-top: 5mm;
+    padding-left: 7.7mm;
+    font-size: 9.3pt;
+    line-height: 1.2;
+    color: #666;
+  }
+
+  .disclaimer .green { color: #356d28; font-weight: 700; }
+
+  .contact {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 25.5mm;
+    text-align: center;
+    color: #111;
+    font-size: 10.5pt;
+    white-space: nowrap;
+  }
+
+  .contact .icon {
+    display: inline-block;
+    color: #999;
+    margin-left: 7mm;
+    margin-right: 2.1mm;
+    font-size: 11pt;
+  }
+
+  .contact .first-icon { margin-left: 6mm; }
+
+  .browser-bottom {
+    position: absolute;
+    left: 10.2mm;
+    right: 10.2mm;
+    bottom: 8.4mm;
+    font-size: 7.7pt;
+    color: #111;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .terms-page .brand-row { margin-bottom: 3.7mm; }
+
+  .terms-title {
+    margin: 0 0 6.6mm 5.2mm;
+    color: #00513f;
+    font-size: 17.2pt;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  .terms-list {
+    margin: 0 7.2mm 0 10.5mm;
+    padding-left: 4.7mm;
+    color: #555;
+    font-size: 10.25pt;
+    line-height: 1.52;
+  }
+
+  .terms-list li {
+    padding-left: 1.4mm;
+    margin: 0;
+  }
+
+  .terms-page .disclaimer { bottom: 38.8mm; }
+
+  @media print {
+    .page { break-after: page; }
+    .page:last-child { break-after: auto; }
+  }
+</style>
 </head>
-
 <body>
 
-    <!-- HEADER -->
+<!-- PAGE 1 -->
+<section class="page">
+  <div class="browser-top">
+    <span><%= invoice.generatedDate || invoice.printDate || new Date().toLocaleDateString('en-US') %></span>
+    <span class="suite">UClean Suite 2.0</span>
+  </div>
 
-    <div style="
-    background:#00573f;
-    padding:20px;
-    margin:-20px -20px 30px -20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    ">
+  <div class="brand-row">
+    <img class="brand-logo" src="" alt="UClean">
+    <div class="website">www.ucleanlaundry.com</div>
+  </div>
 
-        <!-- <img src="/images/uc-white.png" alt="Logo" style="height:60px;"> -->
-        <div>
+  <div class="invoice-meta">
+    <div class="tax">
+      <span class="label">Tax Invoice No. - </span><span class="value"><%= invoiceNumber %></span>
+    </div>
+  </div>
 
-            <div class="logo">
-                UClean
-            </div>
-
-            <div>
-                We ❤️ Laundry
-            </div>
-
+  <div class="customer-store">
+    <div class="details-block">
+      <h2 class="section-heading">CUSTOMER DETAILS</h2>
+      <div class="detail-row"><div class="key">Name:</div><div class="value"><%= customerName %></div></div>
+      <div class="detail-row"><div class="key">Ph No.:</div><div class="value"><%= customerPhone %></div></div>
+      <div class="detail-row">
+        <div class="key">Address:</div>
+        <div class="value">
+          <% customerAddressLines.forEach((line, i) => { %><span class="address-line"><%= line %></span><% }); %>
         </div>
-
-        <div style="
-        color:white;
-        font-size:20px;
-        font-weight:bold;
-        ">
-            www.ucleanlaundry.com
-        </div>
-
+      </div>
     </div>
 
-    <!-- CUSTOMER -->
-
-    <div class="section">
-
-        <div class="row">
-
-            <div class="col">
-
-                <div class="section-title">
-                    CUSTOMER DETAILS
-                </div>
-
-                <p>
-                    <strong>Name:</strong>
-                    <%= invoice.orderId?.customerId?.name || '-' %>
-                </p>
-
-                <p>
-                    <strong>Phone:</strong>
-                    <%= invoice.orderId?.customerId?.phone || '-' %>
-                </p>
-
-                <p>
-                    <strong>GST No:</strong>
-                    <%= invoice.customerGST || '-' %>
-                </p>
-
-            </div>
-
-            <div class="col">
-
-                <div class="section-title">
-                    STORE DETAILS
-                </div>
-                <p>
-                    <strong>Code:</strong>
-                    UC772
-                </p>
-
-                <p>
-                    <strong>Name:</strong>
-                    UClean Dombivli Thane
-                </p>
-
-                <p>
-                    <strong>GSTIN:</strong>
-                    27ABNFR4579F1ZM
-                </p>
-
-                <p>
-                    <strong>Phone:</strong>
-                    +91 9372550037
-                </p>
-
-                <p>
-                    <strong>Address:</strong>
-                    Shop No 17,
-                    Regency Anantam,
-                    Dombivli East
-                </p>
-
-            </div>
-
-            <div class="col">
-
-                <div class="section-title">
-                    ORDER DETAILS
-                </div>
-                <p>
-                    <strong>Order No:</strong>
-                    <%= invoice.orderId?.orderNumber || '-' %>
-                </p>
-
-                <p>
-                    <strong>Challan No:</strong>
-                    <%= invoice.challanNumber || '-' %>
-                </p>
-
-                <p>
-                    <strong>Delivery Date:</strong>
-                    <%= invoice.deliveryDate ? new Date(invoice.deliveryDate).toLocaleDateString('en-IN') : '-' %>
-                </p>
-
-                <p>
-                    <strong>Delivery Time:</strong>
-                    <%= invoice.deliveryTime || '-' %>
-                </p>
-
-            </div>
-
+    <div class="details-block">
+      <h2 class="section-heading">STORE DETAILS</h2>
+      <div class="detail-row"><div class="key">Code:</div><div class="value"><%= storeCode %></div></div>
+      <div class="detail-row"><div class="key">Name:</div><div class="value"><%= storeName %></div></div>
+      <div class="detail-row"><div class="key">GSTIN:</div><div class="value"><%= storeGSTIN %></div></div>
+      <div class="detail-row"><div class="key">Ph No.:</div><div class="value"><%= storePhone %></div></div>
+      <div class="detail-row">
+        <div class="key">Address:</div>
+        <div class="value">
+          <% storeAddressLines.forEach((line, i) => { %><span class="address-line"><%= line %></span><% }); %>
         </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="order-section">
+    <h2 class="section-heading">ORDER DETAILS</h2>
+
+    <div class="order-meta">
+      <div class="order-meta-block">
+        <div class="order-meta-title">ORDER NO. - <%= orderNumber %></div>
+        <div class="order-meta-value"><%= fmtDateTime(orderDate) %></div>
+      </div>
+      <div class="order-meta-block">
+        <div class="order-meta-title">PICKUP DONE DATE &amp; TIME</div>
+        <div class="order-meta-value"><%= fmtDateTime(pickupDateTime) %></div>
+      </div>
+      <div class="order-meta-block">
+        <div class="order-meta-title">DELIVERY DATE &amp; TIME</div>
+        <div class="order-meta-value"><%= fmtDateTime(deliveryDateTime) %></div>
+      </div>
     </div>
 
+    <table class="items-table">
+      <colgroup>
+        <col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"><col class="c8"><col class="c9">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>S.NO.</th>
+          <th>SERVICE</th>
+          <th>HSN/SAC</th>
+          <th>ITEMS</th>
+          <th>RATE</th>
+          <th>QTY.</th>
+          <!-- <th>WT./KG</th> -->
+          <th>ADDONS</th>
+          <th>AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach((item, index) => { %>
+          <% const lineAmount = item.amount != null ? Number(item.amount) : (Number(item.quantity || 0) * Number(item.rate || 0)); %>
+          <tr>
+            <td><%= index + 1 %>.</td>
+            <td><%= item.serviceName || item.service || '-' %></td>
+            <td><%= item.hsnSac || '999712' %></td>
+            <td><%= item.itemName || item.items || '-' %></td>
+            <td><%= fmt(item.rate) %></td>
+            <td><%= item.quantity ?? '-' %></td>
+            <!-- <td><%= item.weight ?? item.weightKg ?? '-' %></td> -->
+            <td><%= fmt(item.addonAmount || item.addons || 0) %></td>
+            <td><%= fmt(lineAmount) %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
 
-    <!-- ITEMS -->
-
-    <div class="section">
-
-        <table>
-
-            <thead>
-
-                <tr>
-                    <th>S.NO.</th>
-                    <th>SERVICE</th>
-                    <th>ITEMS</th>
-                    <th>RATE</th>
-                    <th>QTY</th>
-                    <th>AMOUNT</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <% let subTotal=0; %>
-
-                    <% invoice.items.forEach((item,index)=>{ %>
-
-                        <% const amount=item.quantity * item.rate; %>
-
-                            <% subTotal +=amount; %>
-
-                                <tr>
-                                    <td>
-                                        <%= index + 1 %>
-                                    </td>
-                                    <td>
-                                        <%= item.serviceName %>
-                                    </td>
-                                    <td>
-                                        <%= item.itemName %>
-                                    </td>
-                                    <td>₹<%= item.rate %>
-                                    </td>
-                                    <td>
-                                        <%= item.quantity %>
-                                    </td>
-                                    <td>₹<%= item.amount %>
-                                    </td>
-                                </tr>
-
-                                <% }) %>
-
-            </tbody>
-
-        </table>
-
+    <div class="summary">
+      <div class="summary-row"><div class="label">Amount:</div><div class="amount">₹ <%= fmt(subTotal) %></div></div>
+      <div class="summary-row"><div class="label">Addon:</div><div class="amount">₹ <%= fmt(addonTotal) %></div></div>
+      <div class="summary-row"><div class="label">Express Amount:</div><div class="amount">₹ <%= fmt(expressAmount) %></div></div>
+      <div class="summary-row"><div class="label">Discount:</div><div class="amount">₹ <%= fmt(discount) %></div></div>
+      <% if (invoice.applyGST) { %>
+        <div class="summary-row"><div class="label">SGST:</div><div class="amount"><%= fmt(sgst) %></div></div>
+        <div class="summary-row"><div class="label">CGST:</div><div class="amount"><%= fmt(cgst) %></div></div>
+      <% } %>
+      <div class="summary-row summary-total"><div class="label">TOTAL</div><div class="amount">₹ <%= fmt(grandTotal) %></div></div>
     </div>
+  </div>
+
+  <!-- <div class="disclaimer">
+    Disclaimer: I hereby acknowledge that I accept the service <span class="green">terms &amp; conditions*</span>
+  </div> -->
+
+  <!-- <div class="contact">
+    Contact Support:
+    <span class="icon first-icon">☎</span>9999759911
+    <span class="icon">▱</span>support@uclean.in
+  </div> -->
+
+  <div class="browser-bottom">
+    <span><%= invoice.sourceUrl || 'https://storepanel.ucleanlaundry.com/create-order/444248' %></span>
+    <span>1/2</span>
+  </div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="page terms-page">
+  <div class="browser-top">
+    <span><%= invoice.generatedDate || invoice.printDate || new Date().toLocaleDateString('en-US') %></span>
+    <span class="suite">UClean Suite 2.0</span>
+  </div>
+
+  <div class="brand-row">
+    <img class="brand-logo" src="" alt="UClean">
+    <div class="website">www.ucleanlaundry.com</div>
+  </div>
+
+  <h1 class="terms-title">Terms and Conditions</h1>
+  <ol class="terms-list">
+    <% terms.forEach(term => { %>
+      <li><%= term %></li>
+    <% }); %>
+  </ol>
+
+  <div class="disclaimer">
+    Disclaimer: I hereby acknowledge that I accept the service <span class="green">terms &amp; conditions*</span>
+  </div>
+
+  <div class="contact">
+    Contact Support:
+    <span class="icon first-icon">☎</span>9999759911
+    <span class="icon">▱</span>support@uclean.in
+  </div>
+
+  <div class="browser-bottom">
+    <span><%= invoice.sourceUrl || 'https://storepanel.ucleanlaundry.com/create-order/444248' %></span>
+    <span>2/2</span>
+  </div>
+</section>
 
-    <!-- TOTALS -->
-
-    <% const gstAmount=invoice.applyGST ? invoice.gstAmount : 0; const cgst=gstAmount / 2; const sgst=gstAmount / 2;
-        const grandTotal=invoice.finalAmount; %>
-
-        <table class="summary">
-
-            <tr>
-                <td>Amount:</td>
-                <td class="text-right">
-                    ₹<%= subTotal.toFixed(2) %>
-                </td>
-            </tr>
-
-            <tr>
-                <td>Addon:</td>
-                <td class="text-right">
-                    ₹0.00
-                </td>
-            </tr>
-
-            <tr>
-                <td>Express Amount:</td>
-                <td class="text-right">
-                    ₹<%= invoice.expressCharge || 0 %>
-                </td>
-            </tr>
-
-            <tr>
-                <td>Discount:</td>
-                <td class="text-right">
-                    ₹<%= invoice.discount || 0 %>
-                </td>
-            </tr>
-
-            <% if(invoice.applyGST){ %>
-
-                <tr>
-                    <td>SGST:</td>
-                    <td class="text-right">
-                        ₹<%= (invoice.gstAmount/2).toFixed(2) %>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CGST:</td>
-                    <td class="text-right">
-                        ₹<%= (invoice.gstAmount/2).toFixed(2) %>
-                    </td>
-                </tr>
-
-                <% } %>
-
-                    <tr class="grand-total">
-                        <td>TOTAL</td>
-                        <td class="text-right">
-                            ₹<%= invoice.finalAmount.toFixed(2) %>
-                        </td>
-                    </tr>
-
-        </table>
-
-        <div class="disclaimer">
-
-            Disclaimer:
-            I hereby acknowledge that I accept the service
-
-            <span style="
-                color:#8cc63f;
-                font-weight:bold;
-                ">
-                terms & conditions*
-            </span>
-
-        </div>
-
-        <div class="page-number">
-            Page: 1 of 2
-        </div>
-
-        <div class="contact-footer">
-
-            Contact Support:
-
-            &nbsp;&nbsp;&nbsp;
-
-            9999759911
-
-            &nbsp;&nbsp;&nbsp;
-
-            support@uclean.in
-
-        </div>
-
-
-        <!-- Page 2  -->
-
-        <div style="page-break-before: always;"></div>
-        <div style="
-                background:#00573f;
-                padding:20px;
-                margin:-20px -20px 30px -20px;
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                ">
-
-            <!-- <img src="/images/uc-white.png" alt="logo" style="height:60px;"> -->
-            <div>
-                <div class="logo">
-                    UClean
-                </div>
-
-                <div>
-                    We ❤️ Laundry
-                </div>
-            </div>
-
-
-            <div style="
-                    color:white;
-                    font-size:20px;
-                    font-weight:bold;
-                    ">
-                www.ucleanlaundry.com
-            </div>
-
-        </div>
-        <h2>Terms and Conditions</h2>
-
-        <ol>
-
-            <li>The original receipt must be presented at the time of delivery of processed articles.</li>
-
-            <li>If the original receipt or invoice is not presented at the time of delivery, the articles will
-                be handed over only after proper verification.</li>
-
-            <li>Any complaint regarding processed articles must be reported within 48 hours.</li>
-
-            <li>Express delivery services may attract additional charges.</li>
-
-            <li>Additional charges may apply for special stain removal treatment.</li>
-
-            <li>UClean is not responsible for colour bleeding or shrinkage caused due to garment quality.</li>
-
-            <li>We are not responsible for damages to embroidery or embellishments.</li>
-
-            <li>Garments with pre-existing defects are accepted at customer's risk.</li>
-
-            <li>No fault no claim policy applies.</li>
-
-            <li>Items not collected within 3 weeks are at customer's responsibility.</li>
-
-            <li>We are not responsible for ornaments attached to garments.</li>
-
-            <li>Manufacturing defects are not covered.</li>
-
-            <li>Discounts cannot be applied after invoice generation.</li>
-
-            <li>Multiple discounts cannot be combined.</li>
-
-            <li>Delivery delays due to unforeseen circumstances are not compensable.</li>
-
-            <li>Valuables left inside garments are customer's responsibility.</li>
-
-            <li>Loss due to fire, burglary or natural disasters is not covered.</li>
-
-            <li>Compensation for damaged garments is limited as per company policy.</li>
-
-            <li>Disputes are subject to Delhi jurisdiction.</li>
-
-            <li>UClean reserves the right to modify these terms.</li>
-
-            <li>Using the service implies acceptance of all terms above.</li>
-
-        </ol>
-
-        <div class="disclaimer">
-
-            Disclaimer:
-            I hereby acknowledge that I accept the service
-
-            <span style="
-                    color:#8cc63f;
-                    font-weight:bold;
-                    ">
-                terms & conditions*
-            </span>
-
-        </div>
-
-        <div class="page-number">
-            Page: 2 of 2
-        </div>
-
-        <div class="contact-footer">
-
-            Contact Support
-
-            &nbsp;&nbsp;&nbsp;
-
-            9999759911
-
-            &nbsp;&nbsp;&nbsp;
-
-            support@uclean.in
-
-        </div>
 </body>
-
 </html>

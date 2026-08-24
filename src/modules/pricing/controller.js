@@ -69,7 +69,7 @@ class PricingController {
   ) {
 
     try {
-
+      req.body.serviceId = 'SID' + Date.now();
       await service.create(
         req.body
       );

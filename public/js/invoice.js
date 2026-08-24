@@ -20,24 +20,27 @@ function updateInvoice() {
         if (qty <= 0) return;
 
         let rate = 0;
-
-        Object.values(window.pricingData).forEach(category => {
-
-            const item = category.find(
-                x => x.itemName === itemName
-            );
-
-            if (item) {
-                rate = Number(item.price);
+        let serviceName = '';
+        
+        Object.entries(window.pricingData).forEach(
+            ([categoryName, category]) => {
+                const item = category.find(
+                    x => x.itemName === itemName
+                );
+        
+                if (item) {
+                    rate = Number(item.price);
+                    serviceName = categoryName;
+                }
             }
-
-        });
+        );
 
         const amount = qty * rate;
 
         subtotal += amount;
 
         selectedItems.push({
+            serviceName,
             itemName,
             quantity: qty,
             rate,

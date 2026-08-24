@@ -8,12 +8,10 @@ const priceItemSchema =
         ref: "Service",
         required: true
       },
-
-      category: {
+      serviceName: {
         type: String,
         required: true
       },
-
       itemName: {
         type: String,
         required: true

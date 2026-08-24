@@ -21,25 +21,21 @@
               </label>
   
               <select
-                name="serviceId"
+                name="serviceName"
                 class="form-select">
   
-                <% services.forEach(service => { %>
-  
                 <option
-                  value="<%= service._id %>">
+                  value="Dry Cleaning">
   
-                  <%= service.name %>
+                  Dry Cleaning
   
                 </option>
-  
-                <% }) %>
   
               </select>
   
             </div>
   
-            <div class="col-md-6 mb-3">
+            <!-- <div class="col-md-6 mb-3">
   
               <label class="form-label">
                 Category
@@ -51,7 +47,7 @@
                 class="form-control"
                 required>
   
-            </div>
+            </div> -->
   
           </div>
   
